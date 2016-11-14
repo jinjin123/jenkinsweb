@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- Main container -->
+<div class="container-fluid container-pf-nav-pf-vertical container-pf-nav-pf-vertical-with-secondary">
+  <div class="row text-center">
+    <h1>Jino - Jenkins Dashboard</h1>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-10 col-md-offset-1">
+      <h2><strong>Neutron</strong></h2>
+      <table class="list table table-striped table-bordered table-hover table-condensed">
+        <thead>
+          <tr>
+            <th>RHOSP 5</th>
+            <th>RHOSP 6</th>
+            <th>RHOSP 7</th>
+            <th>RHOSP 8</th>
+            <th>RHOSP 9</th>
+            <th>RHOSP 10</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+	   		  <td><span class="ok label status-label">OK</span></td>
+			  <td><span class="changed label status-label">CHANGED</span></td>
+			  <td><span class="failed label status-label">FAILED</span></td>
+			  <td><span class="skipped label status-label">SKIPPED</span></td>
+              <th><span class="unreachable label status-label">UNREACHABLE</span></th>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -11,12 +11,3 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Flask
-
-
-def create_app(app_name='app'):
-    app = Flask(app_name)
-
-    return app
-
-app = create_app
