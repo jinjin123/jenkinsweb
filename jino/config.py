@@ -11,21 +11,17 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Flask
+import os
 
-import jino.parser
-
-app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-def main():
-    from jino.views import home
+# === Database ====
 
-    parser = jino.parser.create()
-    args = parser.parse_args()
-    
-    app.config.from_object('jino.config')
-    app.run()
+# Path of the database file
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
-if __name__ == '__main__':
-    main()
+# 
+SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+# slow database query threshold (in seconds)
+DATABASE_QUERY_TIMEOUT = 0.5

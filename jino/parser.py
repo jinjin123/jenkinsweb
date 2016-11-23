@@ -11,21 +11,18 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Flask
-
-import jino.parser
-
-app = Flask(__name__)
+import argparse
 
 
-def main():
-    from jino.views import home
+def create():
+    """Returns argparse parser."""
+    parser = argparse.ArgumentParser()
 
-    parser = jino.parser.create()
-    args = parser.parse_args()
-    
-    app.config.from_object('jino.config')
-    app.run()
+    parser.add_argument('runserver', help='Run Jino')
+    parser.add_argument('--jenkins', '-j', dest="jenkins", help='Jenkins URL')
+    parser.add_argument('--username', '-u', dest="username",
+                        help='Jenkins username')
+    parser.add_argument('--password', '-p', dest="password",
+                        help='Jenkins user password')
 
-if __name__ == '__main__':
-    main()
+    return parser

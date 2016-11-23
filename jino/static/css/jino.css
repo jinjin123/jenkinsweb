@@ -36,7 +36,7 @@ pre {
     background-color: #a30000;
 }
 .skipped, .ignored {
-    background-color: #047a7b;
+    background-color: #808080;
 }
 .ok {
     background-color: #3e7b04;

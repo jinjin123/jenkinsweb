@@ -11,21 +11,24 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Flask
+from flask import render_template
+import jenkins
 
-import jino.parser
+import jino.jenkins as jenk
+from jino.main import app
 
-app = Flask(__name__)
 
+@app.route('/')
+def home():
 
-def main():
-    from jino.views import home
+    # Create Jenkins server instance
+    server = jenkins.Jenkins(app.template_test, username, password)
 
-    parser = jino.parser.create()
-    args = parser.parse_args()
-    
-    app.config.from_object('jino.config')
-    app.run()
+    # todo(abregman): don't hardcode jobs, let jino load configuration (YAML)
+    #                  that includes jobs list
+    jobs = ["blabla", "blablab2"]
 
-if __name__ == '__main__':
-    main()
+    # todo(abregman): run only once a day, and keep nightly status in the DB
+    jobs_status = jenk.get_jobs_status(server, jobs)
+
+    return render_template('home.html', status=jobs_status)

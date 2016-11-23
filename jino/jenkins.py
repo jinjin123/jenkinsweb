@@ -11,21 +11,19 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Flask
-
-import jino.parser
-
-app = Flask(__name__)
 
 
-def main():
-    from jino.views import home
+def get_jobs_status(server, jobs):
+    """Returns dict of jobs and their status
 
-    parser = jino.parser.create()
-    args = parser.parse_args()
-    
-    app.config.from_object('jino.config')
-    app.run()
+    :param server: Jenkins server instance
+    :param jobs: list of jobs
+    """
 
-if __name__ == '__main__':
-    main()
+    jobs_status = {}
+
+    for job in jobs:
+        job_info = server.get_job_info()
+        jobs_status[job] = job_info.status
+
+    return jobs_status
