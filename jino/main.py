@@ -24,6 +24,9 @@ def main():
     parser = jino.parser.create()
     args = parser.parse_args()
     
+    for arg in vars(args):
+        app.config[arg] = getattr(args, arg)
+
     app.config.from_object('jino.config')
     app.run()
 

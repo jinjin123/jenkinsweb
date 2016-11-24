@@ -19,10 +19,11 @@ def create():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('runserver', help='Run Jino')
-    parser.add_argument('--jenkins', '-j', dest="jenkins", help='Jenkins URL')
+    parser.add_argument('--jenkins', '-j', dest="jenkins", help='Jenkins URL',
+                        required=True)
     parser.add_argument('--username', '-u', dest="username",
-                        help='Jenkins username')
+                        help='Jenkins username', required=True)
     parser.add_argument('--password', '-p', dest="password",
-                        help='Jenkins user password')
+                        help='Jenkins user password', required=True)
 
     return parser

@@ -22,13 +22,19 @@ from jino.main import app
 def home():
 
     # Create Jenkins server instance
-    server = jenkins.Jenkins(app.template_test, username, password)
+    server = jenkins.Jenkins(app.config['jenkins'], app.config['username'],
+                             app.config['password'])
 
     # todo(abregman): don't hardcode jobs, let jino load configuration (YAML)
     #                  that includes jobs list
-    jobs = ["blabla", "blablab2"]
+    jobs = ["neutron-nightly-rhos-5.0-coreci",
+            "neutron-nightly-rhos-6.0-coreci",
+            "neutron-nightly-rhos-7.0-coreci",
+            "neutron-nightly-rhos-8.0-coreci",
+            "neutron-nightly-rhos-9.0-coreci",
+            "neutron-nightly-rhos-10.0-coreci"]
 
     # todo(abregman): run only once a day, and keep nightly status in the DB
     jobs_status = jenk.get_jobs_status(server, jobs)
 
-    return render_template('home.html', status=jobs_status)
+    return render_template('home.html', jobs=jobs, status=jobs_status)

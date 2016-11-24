@@ -11,6 +11,9 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+import logging
+
+LOG = logging.getLogger('__main__')
 
 
 def get_jobs_status(server, jobs):
@@ -22,8 +25,16 @@ def get_jobs_status(server, jobs):
 
     jobs_status = {}
 
-    for job in jobs:
-        job_info = server.get_job_info()
-        jobs_status[job] = job_info.status
+    try:
+        for job in jobs:
+            last_build_num = server.get_job_info(
+                job)['lastCompletedBuild']['number']
+            status = str(server.get_build_info(
+                job, last_build_num)['result'])
+
+            jobs_status[job] = status
+
+    except Exception:
+        LOG.info("Could not get information for %s", job)
 
     return jobs_status
