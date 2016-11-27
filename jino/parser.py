@@ -25,5 +25,7 @@ def create():
                         help='Jenkins username', required=True)
     parser.add_argument('--password', '-p', dest="password",
                         help='Jenkins user password', required=True)
+    parser.add_argument('--conf', '-c', dest="config",
+                        help='Jino configuration', required=True)
 
     return parser

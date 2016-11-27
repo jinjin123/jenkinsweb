@@ -12,10 +12,28 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 from flask import Flask
+import yaml
 
 import jino.parser
 
+DEFAULT_CONFIG = '/etc/jino/config.yaml'
+
 app = Flask(__name__)
+
+
+def read_config(conf):
+    """Reads config."""
+    jobs = []
+    titles = []
+
+    with open(conf, 'r') as f:
+        conf = yaml.load(f)
+        for table in conf:
+            for job in table['jobs']:
+                jobs.append(job['name'])
+                titles.append(job['title'])
+
+    return jobs, titles
 
 
 def main():
@@ -23,7 +41,10 @@ def main():
 
     parser = jino.parser.create()
     args = parser.parse_args()
-    
+
+    app.config['jobs'], app.config['titles'] = read_config(
+        args.config or DEFAULT_CONFIG)
+
     for arg in vars(args):
         app.config[arg] = getattr(args, arg)
 

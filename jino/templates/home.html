@@ -13,12 +13,9 @@
         <thead>
           <tr>
 			<th></th>
-            <th>RHOSP 5</th>
-            <th>RHOSP 6</th>
-            <th>RHOSP 7</th>
-            <th>RHOSP 8</th>
-            <th>RHOSP 9</th>
-            <th>RHOSP 10</th>
+			{% for title in titles %}
+			<th>{{ title }}</th>
+			{% endfor %}
           </tr>
         </thead>
         <tbody>

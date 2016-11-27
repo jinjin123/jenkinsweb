@@ -18,21 +18,23 @@ Jino requires several arguments in order to run properly:
 * Jenkins URL   - the url of your Jenkins server (e.g http://my_jenkins)
 * Username      - Jenkins username
 * Password      - Jenkins password
-* Configuration - Which jobs you are interested in
+* Configuration - Jino will build the home page tables based on the configuration
 
 To run Jino::
 
-    jino runserver --jenkins 'http://my_jenkins' --username X --password Y --config /etc/jino/config.ini
+    jino runserver --jenkins 'http://my_jenkins' --username X --password Y --config /etc/my_jino_config.yaml
 
 Configuration
 -------------
 
 Using YAML format::
 
-    - name: neutron
-		title1:
-		  - job_name1
-		title2:
-		  - job_name2
-		title3:
-		  - job_name3
+    - table: neutron
+      jobs:
+		- title: "Title of the first row"
+		  name: "jenkins-job-name1"
+
+		- title: "Title of the second row"
+		  name: "jenkins-job-name2"
+
+The location specified by --config. By default, Jino will look for /etc/jino/config.yaml.
