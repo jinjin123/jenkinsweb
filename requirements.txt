@@ -1,4 +1,6 @@
 flask
 Flask-Script
+Flask-WTF
 python-jenkins
 PyYaml
+six

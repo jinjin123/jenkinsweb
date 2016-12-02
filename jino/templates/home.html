@@ -6,6 +6,19 @@
   <div class="row text-center">
     <h1>Jino - Jenkins Dashboard</h1>
   </div>
+  <script type=text/javascript>
+    $(function() {
+      $('a#get_result').bind('click', function() {
+        $.getJSON('/_get_job_detailed_result', {
+          a: 2,
+          b: 3
+        }, function(data) {
+          $("#result").text(data.result);
+        });
+        return false;
+      });
+    });
+  </script>
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-10 col-md-offset-1">
       <h2><strong>Neutron</strong></h2>
@@ -27,8 +40,18 @@
 	      </tr>
 			<td>Status</td>
 			{% for job in jobs %}
-			<td><span class="{{ status[job] }} label status-label">{{ status[job] }}</span></td>
+			<td><a id="get_result" class="btn {{ status[job]['button'] }} btn-large" href="result/{{ job }}">{{ status[job]['status'] }}</a></td>
 			{% endfor %}
+          <tr>
+			<td>Sub Jobs</td>
+			{% for job in jobs %}
+			<td>
+			    {% for sub_job in status[job]['sub_jobs'] %}
+				<a class="btn {{ status[job]['sub_jobs'][sub_job]['button'] }} btn-large" href="result/{{ sub_job }}">{{ status[job]['sub_jobs'][sub_job]['status'] }}</a>
+			    {% endfor %}
+			</td>
+			{% endfor %}
+	      </tr>
 		  <tr>
 		  </tr> 
         </tbody>
@@ -38,6 +61,7 @@
   <h2>Alerts</h2>
   <div class="alert alert-success">
     <strong>Success!</strong> This alert box could indicate a successful or positive action.
+	<a href="javascript:void();" id="calculate">calculate server side</a>
   </div>
   <div class="alert alert-info">
     <strong>Info!</strong> This alert box could indicate a neutral informative change or action.
@@ -46,7 +70,7 @@
     <strong>Warning!</strong> This alert box could indicate a warning that might need attention.
   </div>
   <div class="alert alert-danger">
-    <strong>Danger!</strong> This alert box could indicate a dangerous or potentially negative action.
+	<span id="result"></span>
   </div>
 </div>
 
