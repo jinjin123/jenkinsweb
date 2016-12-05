@@ -21,6 +21,8 @@ from wtforms import SubmitField
 
 import jino.jenkins as jenk
 from jino.main import app
+from jino.main import db
+import jino.models as models
 
 LOG = logging.getLogger('__main__')
 
@@ -34,13 +36,16 @@ def home():
     form = Result()
 
     # Create Jenkins server instance
-    server = jenkins.Jenkins(app.config['jenkins'], app.config['username'],
-                             app.config['password'])
+    #server = jenkins.Jenkins(app.config['JENKINS'], app.config['USERNAME'],
+    #                         app.config['PASSWORD'])
 
     # todo(abregman): run only once a day, and keep nightly status in the DB
-    jobs_status = jenk.get_jobs_status(server, app.config['jobs'])
+    #jobs_status = jenk.get_jobs_status(server, app.config['jobs'])
 
-    LOG.info("Jobs data: %s", jobs_status)
+    import pdb; pdb.set_trace()
+    jobs = models.Job.query.all()
+    LOG.info("Jobs: %s", jobs)
+    jobs_result = utils.get_jobs_result(jobs) 
 
     return render_template('home.html', jobs=app.config['jobs'],
                            status=jobs_status, titles=app.config['titles'],
@@ -55,8 +60,8 @@ def result(job):
 def get_job_detailed_result():
     
     # Create Jenkins server instance
-    server = jenkins.Jenkins(app.config['jenkins'], app.config['username'],
-                             app.config['password'])
+    server = jenkins.Jenkins(app.config['JENKINS'], app.config['USERNAME'],
+                             app.config['PASSWORD'])
 
     detailed_result = jenk.get_job_detailed_result(server,
         'neutron-nightly-rhos-5.0-coreci')

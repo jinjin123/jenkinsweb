@@ -11,20 +11,13 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import os
-
-basedir = os.path.abspath(os.path.dirname(__file__))
+from jino.main import db
 
 
-# === Database ====
+class Job(db.Model):
+    """Represents Jenkins job."""
+    name = db.Column(db.String(64), primary_key=True,
+                     index=True, unique=True)
 
-# Path of the database file
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'jino.db')
-
-# SQLAlchemy-migrate data files 
-SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
-
-# slow database query threshold (in seconds)
-DATABASE_QUERY_TIMEOUT = 0.5
-
-SQLALCHEMY_TRACK_MODIFICATIONS = True
+    def __repr__(self):
+        return "<Job %r" % (self.name)
