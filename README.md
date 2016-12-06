@@ -1,7 +1,7 @@
 Jino
 ====
 
-Jino is a dashboard, used for managing and monitoring Jenkins.
+Jino is a web application, used for managing and monitoring Jenkins jobs.
 
 Installation
 ------------
@@ -10,8 +10,8 @@ To install jino, run the following command:
 
     sudo pip install jino
 
-Usage
------
+Running the server
+------------------
 
 Jino requires several arguments in order to run properly:
 
@@ -28,6 +28,7 @@ OR
 
     jino runserver --conf /etc/jino.cfg --jobs /etc/jobs.yaml
 
+
 CONFIGURATION
 -------------
 
@@ -38,6 +39,7 @@ You must specify three variables::
      PASSWORD = <Jenkins user password>
 
 The location specified by --conf. By default, Jino will look for /etc/jino/config.cfg.
+
 
 JOBS
 ----
@@ -53,3 +55,11 @@ Using YAML format::
 		  name: "jenkins-job-name2"
 
 The location specified by --jobs. By default, Jino will look for /etc/jino/jobs.yaml.
+
+
+Drop database tables
+--------------------
+
+To drop all the tables, run::
+
+    jino drop

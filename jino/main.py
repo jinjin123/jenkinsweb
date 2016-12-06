@@ -18,6 +18,7 @@ import logging
 import sys
 import yaml
 
+import jino.jenkins_lib as jenkins
 import jino.parser
 
 # Setup logging
@@ -38,26 +39,25 @@ db = SQLAlchemy(app)
 app.secret_key = 'you_will_never_guess'
 
 
-def read_jobs(conf):
-    """Reads config."""
-    jobs = []
-    titles = []
+def get_jobs(conf):
+    """Reads configuration and returns dict of jobs and their attributes.
+
+    Example:
+        {'my_job':
+            'title': 'a title for my awesome job'
+            'table': 'table number 1'}
+    """
+    jobs = {}
 
     with open(conf, 'r') as f:
         conf = yaml.load(f)
         for table in conf:
             for job in table['jobs']:
-                jobs.append(job['name'])
-                titles.append(job['title'])
+                jobs[job['name']] = {}
+                jobs[job['name']]['title'] = job['title']
+                jobs[job['name']]['table'] = table
 
-    return jobs, titles
-
-
-def add_job_to_db(job):
-    """Adds Jenkins job to the database."""
-
-    db.session.add(job)
-    db.session.commit()
+    return jobs
 
 
 def create_db_tables():
@@ -68,34 +68,91 @@ def create_db_tables():
 def drop_db_tables():
     """Drops all the tables."""
     if prompt_bool("You are about to remove all the data!!! \
-                   You sure you want to proceed?"):
+You sure you want to proceed?"):
         db.drop_all()
 
 
-def main():
-    from jino.views import home
-
-    # Initalize database
-    db.create_all()
-
+def parse_args():
+    """Returns argparse arguments namespace."""
     parser = jino.parser.create()
     args = parser.parse_args()
+
+    return args
+
+
+def check_valid_args(args):
+    """Checks there is a right combination of passed arguments."""
     if (not args.config and not args.jenkins):
         LOG.error("You must either provide config file with --conf \
 or the arguments '--jenkins --username and --password'")
         sys.exit(2)
 
-    app.config['jobs'], app.config['titles'] = read_jobs(
-        args.jobs)
 
-    # Load Jenkins URL, username and password values
+def set_configuration(args):
+    """Set app configuration based on the given arguments."""
+
     if args.jenkins:
         for arg in vars(args):
             app.config[arg] = getattr(args, arg)
     else:
         app.config.from_pyfile(args.config)
 
-    app.run()
+
+def update_database(jobs, jenkins_c):
+    """Makes sure the database contains information on each given job."""
+
+    db_jobs = models.Job.query.all()
+
+    if not db_jobs:
+        LOG.info("Didn't find any entries in the database. Retrieving \
+information from Jenkins...")
+
+        for job, job_attr in jobs.iteritems():
+
+            last_build_status = jenkins_c.get_last_build_status(job)
+            LOG.info("Retrieved information for: %s", job)
+
+            if last_build_status == 'SUCCESS':
+                button_status = 'btn-success'
+            else:
+                button_status = 'btn-failure'
+
+            db.session.add(models.Job(name=job, status=last_build_status,
+                                      title=job_attr['title'],
+                                      button_status=button_status))
+            db.session.commit()
+    else:
+        LOG.info("Database already exists...skipping to running server.")
+
+
+def create_jenkins_client():
+    """Returns jenkins.Jenkins instance."""
+    return jenkins.JenkinsClient(app.config['JENKINS'],
+                                 app.config['USERNAME'],
+                                 app.config['PASSWORD'])
+
+
+def main():
+    # Parse arguments
+    args = parse_args()
+
+    if args.parser == 'drop':
+        drop_db_tables()
+
+    elif args.parser == 'runserver':
+
+        create_db_tables()
+        check_valid_args(args)
+        set_configuration(args)
+        jenkins_c = create_jenkins_client()
+        app.config['jobs'] = get_jobs(args.jobs)
+        update_database(app.config['jobs'], jenkins_c)
+
+        app.run()
+
 
 if __name__ == '__main__':
     main()
+
+import jino.models as models
+from jino.views import home

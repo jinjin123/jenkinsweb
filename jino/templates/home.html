@@ -27,7 +27,7 @@
           <tr>
 			<th></th>
 			{% for title in titles %}
-			<th>{{ title }}</th>
+			<th>{{ jobs[0].title }}</th>
 			{% endfor %}
           </tr>
         </thead>
@@ -35,19 +35,19 @@
 		  <tr>
 			<td>Job Name</td>
 			{% for job in jobs %}
-			<td>{{ job }}</td>
+			<td>{{ job.name }}</td>
 			{% endfor %}
 	      </tr>
 			<td>Status</td>
 			{% for job in jobs %}
-			<td><a id="get_result" class="btn {{ status[job]['button'] }} btn-large" href="result/{{ job }}">{{ status[job]['status'] }}</a></td>
+			<td><a id="get_result" class="btn {{ job.button_status }} btn-large" href="result/{{ job.name }}">{{ job.status }}</a></td>
 			{% endfor %}
           <tr>
 			<td>Sub Jobs</td>
 			{% for job in jobs %}
 			<td>
-			    {% for sub_job in status[job]['sub_jobs'] %}
-				<a class="btn {{ status[job]['sub_jobs'][sub_job]['button'] }} btn-large" href="result/{{ sub_job }}">{{ status[job]['sub_jobs'][sub_job]['status'] }}</a>
+			    {% for job in jobs %}
+				<a class="btn {{ job.button_status }} btn-large" href="result/{{ job.name }}">{{ job.status }}</a>
 			    {% endfor %}
 			</td>
 			{% endfor %}

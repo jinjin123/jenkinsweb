@@ -14,16 +14,41 @@
 import argparse
 
 
+def create_runserver_parser(subparsers, parent_parser):
+    """Adds sub-parser for 'runserver'."""
+
+    runserver_parser = subparsers.add_parser(
+        "runserver", parents=[parent_parser])
+
+    runserver_parser.add_argument(
+        '--jenkins', '-j', dest="jenkins", help='Jenkins URL')
+    runserver_parser.add_argument(
+        '--username', '-u', dest="username", help='Jenkins username')
+    runserver_parser.add_argument(
+        '--password', '-p', dest="password", help='Jenkins user password')
+    runserver_parser.add_argument(
+        '--conf', '-c', dest="config", help='Jino configuration')
+    runserver_parser.add_argument(
+        '--jobs', dest="jobs", help='Jenkins Jobs YAML', required=True)
+
+
+def create_drop_parser(subparsers, parent_parser):
+    """Adds sub-parser for 'drop'."""
+
+    drop_parser = subparsers.add_parser(
+        "drop", parents=[parent_parser])
+
 def create():
     """Returns argparse parser."""
-    parser = argparse.ArgumentParser()
 
-    parser.add_argument('runserver', help='Run Jino')
-    parser.add_argument('--jenkins', '-j', dest="jenkins", help='Jenkins URL')
-    parser.add_argument('--username', '-u', dest="username", help='Jenkins username')
-    parser.add_argument('--password', '-p', dest="password", help='Jenkins user password')
-    parser.add_argument('--conf', '-c', dest="config", help='Jino configuration')
-    parser.add_argument('--jobs', dest="jobs",
-                        help='Jenkins Jobs YAML', required=True)
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    parent_parser.add_argument('--debug', required=False, action='store_true',
+                               dest="debug", help='Turn DEBUG on')
+
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest="parser")
+
+    create_runserver_parser(subparsers, parent_parser)
+    create_drop_parser(subparsers, parent_parser)
 
     return parser

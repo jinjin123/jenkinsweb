@@ -11,6 +11,7 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+import jenkins
 import logging
 import sys
 
@@ -85,3 +86,26 @@ def get_job_detailed_result(server, job):
     #request.add_header('Authorization', auth)
     #failure = urlopen(request).read()
 
+
+class JenkinsClient(object):
+
+    def __init__(self, url, user, password):
+        self.url = url
+        self.user = user
+        self.password = password
+
+        self.client = jenkins.Jenkins(self.url, self.user, self.password)
+
+    def get_last_build_status(self, job):
+        """Given a job name, it returns string of the last completed
+
+        build status.
+        """
+        # Get last completed build number
+        last_build_num = self.client.get_job_info(
+            job)['lastCompletedBuild']['number']
+
+        # Get last completed build status
+        status = str(self.client.get_build_info(
+            job, last_build_num)['result'])
+        return status
