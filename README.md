@@ -29,10 +29,10 @@ OR
     jino runserver --conf /etc/jino.cfg --jobs /etc/jobs.yaml
 
 
-CONFIGURATION
+Configuration
 -------------
 
-You must specify three variables::
+You must specify three variables:
 
      JENKINS = http://<your_jenkins_server>
      USERNAME = <Jenkins user>
@@ -41,10 +41,10 @@ You must specify three variables::
 The location specified by --conf. By default, Jino will look for /etc/jino/config.cfg.
 
 
-JOBS
+Jobs
 ----
 
-Using YAML format::
+Using YAML format:
 
     - table: neutron
       jobs:
@@ -60,6 +60,6 @@ The location specified by --jobs. By default, Jino will look for /etc/jino/jobs.
 Drop database tables
 --------------------
 
-To drop all the tables, run::
+To drop all the tables, run:
 
     jino drop

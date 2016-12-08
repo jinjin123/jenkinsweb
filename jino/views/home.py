@@ -35,9 +35,9 @@ def home():
 
     form = Result()
 
-    jobs = models.Job.query.all()
+    jobs = models.Multi_Job.query.all()
 
-    return render_template('home.html', jobs=jobs, form=form)
+    return render_template('home.html', jobs=jobs, form=form, config=app.config)
 
 
 @app.route('/result/<job>', methods=['GET','POST'])

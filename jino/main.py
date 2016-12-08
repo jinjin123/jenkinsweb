@@ -93,7 +93,7 @@ def set_configuration(args):
 
     if args.jenkins:
         for arg in vars(args):
-            app.config[arg] = getattr(args, arg)
+            app.config[arg.upper()] = getattr(args, arg)
     else:
         app.config.from_pyfile(args.config)
 
@@ -115,11 +115,11 @@ information from Jenkins...")
             if last_build_status == 'SUCCESS':
                 button_status = 'btn-success'
             else:
-                button_status = 'btn-failure'
+                button_status = 'btn-danger'
 
-            db.session.add(models.Job(name=job, status=last_build_status,
-                                      title=job_attr['title'],
-                                      button_status=button_status))
+            db.session.add(models.Multi_Job(name=job, status=last_build_status,
+                                            title=job_attr['title'],
+                                            button_status=button_status))
             db.session.commit()
     else:
         LOG.info("Database already exists...skipping to running server.")

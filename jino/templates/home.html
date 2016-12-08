@@ -6,6 +6,15 @@
   <div class="row text-center">
     <h1>Jino - Jenkins Dashboard</h1>
   </div>
+
+  <div class="container">
+  <div class="alert alert-success">
+    <strong>Connected</strong><br>
+	<strong>Jenkins server: </strong>{{ config['JENKINS'] }}
+	<a href="javascript:void();" id="calculate">calculate server side</a>
+  </div>
+  </div>
+
   <script type=text/javascript>
     $(function() {
       $('a#get_result').bind('click', function() {
@@ -26,8 +35,8 @@
         <thead>
           <tr>
 			<th></th>
-			{% for title in titles %}
-			<th>{{ jobs[0].title }}</th>
+			{% for job in jobs %}
+			<th>{{ job.title }}</th>
 			{% endfor %}
           </tr>
         </thead>
@@ -59,10 +68,6 @@
 
 <div class="container">
   <h2>Alerts</h2>
-  <div class="alert alert-success">
-    <strong>Success!</strong> This alert box could indicate a successful or positive action.
-	<a href="javascript:void();" id="calculate">calculate server side</a>
-  </div>
   <div class="alert alert-info">
     <strong>Info!</strong> This alert box could indicate a neutral informative change or action.
   </div>
