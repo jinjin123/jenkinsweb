@@ -18,11 +18,11 @@
   <script type=text/javascript>
     $(function() {
       $('a#get_result').bind('click', function() {
-        $.getJSON('/_get_job_detailed_result', {
+        $.getJSON('/_get_job_console_output', {
           a: 2,
           b: 3
         }, function(data) {
-          $("#result").text(data.result);
+          $("#output").text(data.output);
         });
         return false;
       });
@@ -55,8 +55,8 @@
 			<td>Sub Jobs</td>
 			{% for job in jobs %}
 			<td>
-			    {% for job in jobs %}
-				<a class="btn {{ job.button_status }} btn-large" href="result/{{ job.name }}">{{ job.status }}</a>
+			    {% for sub_job in job.sub_jobs %}
+				<a class="btn {{ sub_job.button_status }} btn-large" href="result/{{ sub_job.name }}">{{ sub_job.name }}</a>
 			    {% endfor %}
 			</td>
 			{% endfor %}
@@ -75,7 +75,7 @@
     <strong>Warning!</strong> This alert box could indicate a warning that might need attention.
   </div>
   <div class="alert alert-danger">
-	<span id="result"></span>
+	<span id="output"></span>
   </div>
 </div>
 

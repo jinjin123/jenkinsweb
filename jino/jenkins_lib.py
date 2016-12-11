@@ -109,3 +109,35 @@ class JenkinsClient(object):
         status = str(self.client.get_build_info(
             job, last_build_num)['result'])
         return status
+
+    def get_sub_jobs(self, job):
+        """Given a job name, it returns a list of sub jobs
+
+        dictionaries.
+
+        [{'subJob_1': {'status': 'success'},
+         {'subJob_2': {'status': 'failure'}] 
+
+        If no sub jobs exist it returns None"""
+         
+        sub_jobs = []
+        job_info = self.client.get_job_info(job)
+
+        if job_info['lastCompletedBuild']['subBuilds']:
+
+            for sub_job in job_info['lastCompletedBuild']['subBuilds']:
+                sub_jobs.append({sub_job['jobName']: {}})
+                sub_jobs[-1][sub_job['jobName']]['status'] = sub_job['result']
+
+            return sub_jobs
+
+        else:
+            return None
+
+    def get_console_output(self, job, build_number):
+        """Given a job and a build number, returns the console 
+        
+        output of the build.
+        """
+
+        return self.client.get_build_console_output(job, build_number)

@@ -35,7 +35,7 @@ def home():
 
     form = Result()
 
-    jobs = models.Multi_Job.query.all()
+    jobs = models.Job.query.filter_by(display=True)
 
     return render_template('home.html', jobs=jobs, form=form, config=app.config)
 
@@ -44,17 +44,15 @@ def home():
 def result(job):
     x=2
 
-@app.route('/_get_job_detailed_result')
-def get_job_detailed_result():
-    
-    # Create Jenkins server instance
-    server = jenkins.Jenkins(app.config['JENKINS'], app.config['USERNAME'],
-                             app.config['PASSWORD'])
+@app.route('/_get_job_console_output')
+def get_job_console_output():
 
-    detailed_result = jenkins.get_job_detailed_result(server,
+    a = request.args.get('a', 0, type=int)
+    LOG.info("here you go!: %s", a)
+
+    console_output = app.config['client'].get_console_output(
         'neutron-nightly-rhos-5.0-coreci')
 
-    return jsonify(result=detailed_result)
-    #a = request.args.get('a', 0, type=int)
+    return jsonify(output=console_output)
     #b = request.args.get('b', 0, type=int)
     #return jsonify(result=a + b)

@@ -14,33 +14,12 @@
 from jino.main import db
 
 
-job_multi_job = db.Table('job_multi_job',
-                         db.Column('job_name', db.String(64),
-                                   db.ForeignKey('job.name')),
-                         db.Column('multi_job_name', db.String(64),
-                                   db.ForeignKey('multi_job.name')),
-                         )
-
-
-class Multi_Job(db.Model):
-    """Represents Jenkins multi job."""
-
-    __tablename__ = 'multi_job'
-
-    name = db.Column(db.String(64), primary_key=True,
-                     index=True, unique=True)
-
-    status = db.Column(db.String(64))
-    button_status = db.Column(db.String(64))
-
-    title = db.Column(db.String(64))
-
-    sub_jobs = db.relationship('Job', secondary=job_multi_job,
-                               backref=db.backref('multi_jobs',
-                                                  lazy='dynamic'))
-
-    def __repr__(self):
-        return "<Multi Job %r" % (self.name)
+jobs = db.Table('jobs',
+                db.Column('parent_job', db.String(64),
+                          db.ForeignKey('job.name')),
+                db.Column('sub_job', db.String(64),
+                          db.ForeignKey('job.name')),
+                )
 
 
 class Job(db.Model):
@@ -50,9 +29,25 @@ class Job(db.Model):
 
     name = db.Column(db.String(64), primary_key=True,
                      index=True, unique=True)
-
     status = db.Column(db.String(64))
     button_status = db.Column(db.String(64))
+    title = db.Column(db.String(64))
+    display = db.Column(db.Boolean, default=False)
+    sub_jobs = db.relationship('Job',
+                               secondary=jobs,
+                               primaryjoin=(jobs.c.parent_job == name),
+                               secondaryjoin=(jobs.c.sub_job == name),
+                               backref=db.backref('jobs', lazy='dynamic'),
+                               lazy='dynamic')
+
+    def is_sub_job(self, job):
+        return self.sub_jobs.filter(
+            jobs.c.sub_job == job.name).count() > 0
+
+    def add_sub_job(self, job):
+        if not self.is_sub_job(job):
+            self.sub_jobs.append(job)
+            return self
 
     def __repr__(self):
         return "<Job %r" % (self.name)

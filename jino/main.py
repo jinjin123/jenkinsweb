@@ -20,6 +20,7 @@ import yaml
 
 import jino.jenkins_lib as jenkins
 import jino.parser
+import jino.utils as utils
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
@@ -109,18 +110,47 @@ information from Jenkins...")
 
         for job, job_attr in jobs.iteritems():
 
+            # Get job last build status
             last_build_status = jenkins_c.get_last_build_status(job)
             LOG.info("Retrieved information for: %s", job)
 
-            if last_build_status == 'SUCCESS':
-                button_status = 'btn-success'
-            else:
-                button_status = 'btn-danger'
+            # Add the job to the database
+            LOG.info("Adding %s to the DB", job)
+            db_job = models.Job(name=job, status=last_build_status,
+                                title=job_attr['title'],
+                                button_status=utils.get_button_status(
+                                    last_build_status),
+                                display=True)
 
-            db.session.add(models.Multi_Job(name=job, status=last_build_status,
-                                            title=job_attr['title'],
-                                            button_status=button_status))
+            db.session.add(db_job)
             db.session.commit()
+
+            # Get sub jobs names
+            LOG.info("Checking for sub jobs for: %s", job)
+            sub_jobs = jenkins_c.get_sub_jobs(job)
+
+            for job_dict in sub_jobs:
+                for job_name, attrs in job_dict.iteritems():
+
+                    # Add sub job to the database
+                    j = models.Job.query.filter_by(name=job_name).first()
+                    if not j:
+                        sub_job = models.Job(
+                            name=job_name,
+                            status=str(attrs['status']),
+                            button_status=utils.get_button_status(
+                                attrs['status']))
+                        LOG.info("Adding %s to the DB", job_name)
+                        db.session.add(sub_job)
+                        db.session.commit()
+                    else:
+                        sub_job = j
+
+                    LOG.info("Adding relationship: %s -> %s", job, job_name)
+                    job_sub_job = db_job.add_sub_job(sub_job)
+                    db.session.add(job_sub_job)
+                    db.session.commit()
+
     else:
         LOG.info("Database already exists...skipping to running server.")
 
@@ -145,6 +175,7 @@ def main():
         check_valid_args(args)
         set_configuration(args)
         jenkins_c = create_jenkins_client()
+        app.config['client'] = jenkins_c
         app.config['jobs'] = get_jobs(args.jobs)
         update_database(app.config['jobs'], jenkins_c)
 
