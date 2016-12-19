@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html class="layout-pf layout-pf-fixed">
 <head>
   <meta charset="utf-8">
@@ -7,6 +8,7 @@
   {% block scripts %}
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap-table.js') }}"></script>
   <script src="{{ url_for('static', filename='js/jquery.matchHeight-min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/patternfly.min.js') }}"></script>
   {% endblock %}
@@ -16,6 +18,7 @@
   <link href="{{ url_for('static', filename='css/patternfly-additions.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/jino.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/bootstrap-table.css') }}" rel="stylesheet">
   {% endblock %}
 
   <title>{% block title %}JINO - Jenkins Dashboard{% endblock %}</title>
@@ -36,6 +39,7 @@
 
     // Initialize the vertical navigation
     $().setupVerticalNavigation(true);
+
   });
 </script>
 </html>

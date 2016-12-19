@@ -11,6 +11,9 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+from sqlalchemy import DateTime
+from sqlalchemy import func
+
 from jino.main import db
 
 
@@ -27,18 +30,21 @@ class Job(db.Model):
 
     __tablename__ = 'job'
 
-    name = db.Column(db.String(64), primary_key=True,
-                     index=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True, unique=True)
     status = db.Column(db.String(64))
     button_status = db.Column(db.String(64))
     title = db.Column(db.String(64))
     display = db.Column(db.Boolean, default=False)
+    build_number = db.Column(db.Integer)
+    build_duration = db.Column(db.String(64))
     sub_jobs = db.relationship('Job',
                                secondary=jobs,
                                primaryjoin=(jobs.c.parent_job == name),
                                secondaryjoin=(jobs.c.sub_job == name),
                                backref=db.backref('jobs', lazy='dynamic'),
                                lazy='dynamic')
+    created_at = db.Column('create_date', DateTime, default=func.now())
 
     def is_sub_job(self, job):
         return self.sub_jobs.filter(

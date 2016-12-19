@@ -22,10 +22,6 @@ import jino.jenkins_lib as jenkins
 import jino.parser
 import jino.utils as utils
 
-# Setup logging
-logging.basicConfig(level=logging.INFO, format='%(message)s')
-LOG = logging.getLogger(__name__)
-
 # Create the application
 app = Flask(__name__)
 
@@ -38,6 +34,14 @@ db = SQLAlchemy(app)
 # Removing the following line will raise the
 # following exception: 'Must provide secret_key to use csrf'.
 app.secret_key = 'you_will_never_guess'
+
+parser = jino.parser.create()
+args = parser.parse_args()
+if args.debug:
+    logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+else:
+    logging.basicConfig(level=logging.INFO, format='%(message)s')
+LOG = logging.getLogger(__name__)
 
 
 def get_jobs(conf):
@@ -73,14 +77,6 @@ You sure you want to proceed?"):
         db.drop_all()
 
 
-def parse_args():
-    """Returns argparse arguments namespace."""
-    parser = jino.parser.create()
-    args = parser.parse_args()
-
-    return args
-
-
 def check_valid_args(args):
     """Checks there is a right combination of passed arguments."""
     if (not args.config and not args.jenkins):
@@ -110,16 +106,19 @@ information from Jenkins...")
 
         for job, job_attr in jobs.iteritems():
 
-            # Get job last build status
-            last_build_status = jenkins_c.get_last_build_status(job)
+            last_build_number = jenkins_c.get_last_build_number(job)
+            last_build_result = jenkins_c.get_build_result(
+                job, last_build_number)
             LOG.info("Retrieved information for: %s", job)
 
             # Add the job to the database
             LOG.info("Adding %s to the DB", job)
-            db_job = models.Job(name=job, status=last_build_status,
+            db_job = models.Job(name=job,
+                                status=last_build_result,
                                 title=job_attr['title'],
+                                build_number=last_build_number,
                                 button_status=utils.get_button_status(
-                                    last_build_status),
+                                    last_build_result),
                                 display=True)
 
             db.session.add(db_job)
@@ -138,6 +137,8 @@ information from Jenkins...")
                         sub_job = models.Job(
                             name=job_name,
                             status=str(attrs['status']),
+                            build_number=attrs['buildNumber'],
+                            build_duration=attrs['duration'],
                             button_status=utils.get_button_status(
                                 attrs['status']))
                         LOG.info("Adding %s to the DB", job_name)
@@ -161,10 +162,7 @@ def create_jenkins_client():
                                  app.config['USERNAME'],
                                  app.config['PASSWORD'])
 
-
 def main():
-    # Parse arguments
-    args = parse_args()
 
     if args.parser == 'drop':
         drop_db_tables()
@@ -187,3 +185,4 @@ if __name__ == '__main__':
 
 import jino.models as models
 from jino.views import home
+from jino.views import provision

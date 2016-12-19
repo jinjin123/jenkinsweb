@@ -1,85 +1,86 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
 <!-- Main container -->
+<br>
 <div class="container-fluid container-pf-nav-pf-vertical container-pf-nav-pf-vertical-with-secondary">
   <div class="row text-center">
-    <h1>Jino - Jenkins Dashboard</h1>
+	  <img src=static/logo/jino.png>
   </div>
 
+<br>
   <div class="container">
   <div class="alert alert-success">
-    <strong>Connected</strong><br>
-	<strong>Jenkins server: </strong>{{ config['JENKINS'] }}
-	<a href="javascript:void();" id="calculate">calculate server side</a>
+    <strong>Connected to: </strong>{{ config['JENKINS'] }}
   </div>
   </div>
 
   <script type=text/javascript>
     $(function() {
-      $('a#get_result').bind('click', function() {
-        $.getJSON('/_get_job_console_output', {
-          a: 2,
-          b: 3
+      $('a#get_output').bind('click', function() {
+        $.getJSON('/get_console_output', {
+          job_name: $(this).attr('job_name'),
+          build_number: $(this).attr('build_number')
         }, function(data) {
+		  $("#output_div").show();
           $("#output").text(data.output);
         });
         return false;
       });
     });
   </script>
+
+
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-10 col-md-offset-1">
       <h2><strong>Neutron</strong></h2>
-      <table class="list table table-striped table-bordered table-hover table-condensed">
-        <thead>
-          <tr>
-			<th></th>
-			{% for job in jobs %}
-			<th>{{ job.title }}</th>
-			{% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-		  <tr>
-			<td>Job Name</td>
-			{% for job in jobs %}
-			<td>{{ job.name }}</td>
-			{% endfor %}
-	      </tr>
-			<td>Status</td>
-			{% for job in jobs %}
-			<td><a id="get_result" class="btn {{ job.button_status }} btn-large" href="result/{{ job.name }}">{{ job.status }}</a></td>
-			{% endfor %}
-          <tr>
-			<td>Sub Jobs</td>
-			{% for job in jobs %}
-			<td>
-			    {% for sub_job in job.sub_jobs %}
-				<a class="btn {{ sub_job.button_status }} btn-large" href="result/{{ sub_job.name }}">{{ sub_job.name }}</a>
-			    {% endfor %}
-			</td>
-			{% endfor %}
-	      </tr>
-		  <tr>
-		  </tr> 
-        </tbody>
-      </table>
 
-<div class="container">
-  <h2>Alerts</h2>
-  <div class="alert alert-info">
-    <strong>Info!</strong> This alert box could indicate a neutral informative change or action.
-  </div>
-  <div class="alert alert-warning">
-    <strong>Warning!</strong> This alert box could indicate a warning that might need attention.
-  </div>
-  <div class="alert alert-danger">
-	<span id="output"></span>
-  </div>
-</div>
+      <table class="list table table-striped table-bordered table-condensed"
+			 data-toggle="table"
+	         data-show-export="true">
+    <thead>
+        <tr>
+            <th>Job Name</th>
+            <th>Build number</th>
+            <th>Build time</th>
+            <th>Result</th>
+            <th>Sub Jobs</th>
+        </tr>
+    </thead>
+    <tbody>
+		{% for job in jobs %}
+        <tr>
+			<td class="col-md-2">{{ job.name }}</td>
+			<td class="col-md-1">{{ job.build_number }}</td>
+			<td class="col-md-1">{{ job.build_time|default('-') }}</td>
+			<td class="col-md-1"><a id="get_output" job_name="{{ job.name }}" build_number="{{ job.build }}" class="btn {{ job.button_status }} btn-large" href=#>{{ job.status }}</a></td>
+            <td class="col-md-1">
+				<button type="button" class="btn btn-info" data-toggle="collapse" data-target=".coll{{ job.id }}">Show</button>
+            </td>
+        </tr>
+					{% for sub_job in job.sub_jobs %}                               
+					<tr class="collapse out budgets coll{{ job.id }}">
+						<td class="bg-info hiddenRow">{{ sub_job.name }}</td>
+						<td class="bg-info hiddenRow">{{ sub_job.build_number }}</td>
+						<td class="bg-info hiddenRow">{{ sub_job.build_duration }}</td>
+						<td class="bg-info hiddenRow"><a class="btn {{ sub_job.button_status }} btn-large" href="result/{{ sub_job.name }}">{{ sub_job.status }}</a></td>
+        </tr>
+			        {% endfor %}	  
+		{% endfor %}
+    </tbody>
+    </table>
+
+
+	  <div style="display:none;" id="output_div" class="container">
+		  <h2>Output</h2>
+		  <div class="alert alert-info">
+			  <pre id="output"></pre>
+		  </div>
+	  </div>
 
     </div>
   </div>
 </div>
+
 {% endblock %}

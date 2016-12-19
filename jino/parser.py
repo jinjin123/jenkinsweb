@@ -35,8 +35,8 @@ def create_runserver_parser(subparsers, parent_parser):
 def create_drop_parser(subparsers, parent_parser):
     """Adds sub-parser for 'drop'."""
 
-    drop_parser = subparsers.add_parser(
-        "drop", parents=[parent_parser])
+    subparsers.add_parser("drop", parents=[parent_parser])
+
 
 def create():
     """Returns argparse parser."""

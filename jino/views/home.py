@@ -15,7 +15,6 @@ from flask import render_template
 from flask import request
 from flask import jsonify
 from flask_wtf import Form
-import jenkins
 import logging
 from wtforms import SubmitField
 
@@ -35,24 +34,18 @@ def home():
 
     form = Result()
 
-    jobs = models.Job.query.filter_by(display=True)
+    jobs = models.Job.query.filter_by(display=True).order_by(models.Job.created_at)
 
     return render_template('home.html', jobs=jobs, form=form, config=app.config)
 
 
-@app.route('/result/<job>', methods=['GET','POST'])
-def result(job):
-    x=2
+@app.route('/get_console_output')
+def get_console_output():
 
-@app.route('/_get_job_console_output')
-def get_job_console_output():
+    job_name = request.args.get('job_name')
+    build_number = request.args.get('build_number')
+    LOG.info("Getting console output for!: %s #%s", job_name, build_number)
 
-    a = request.args.get('a', 0, type=int)
-    LOG.info("here you go!: %s", a)
-
-    console_output = app.config['client'].get_console_output(
-        'neutron-nightly-rhos-5.0-coreci')
+    console_output = app.config['client'].get_console_output(job_name, build_number)
 
     return jsonify(output=console_output)
-    #b = request.args.get('b', 0, type=int)
-    #return jsonify(result=a + b)

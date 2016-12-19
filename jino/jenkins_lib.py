@@ -96,19 +96,16 @@ class JenkinsClient(object):
 
         self.client = jenkins.Jenkins(self.url, self.user, self.password)
 
-    def get_last_build_status(self, job):
+    def get_last_build_number(self, job):
+        """Given a job name, returns the last build number."""
+        return self.client.get_job_info(job)['lastCompletedBuild']['number']
+
+    def get_build_result(self, job, build_number):
         """Given a job name, it returns string of the last completed
 
-        build status.
+        build result.
         """
-        # Get last completed build number
-        last_build_num = self.client.get_job_info(
-            job)['lastCompletedBuild']['number']
-
-        # Get last completed build status
-        status = str(self.client.get_build_info(
-            job, last_build_num)['result'])
-        return status
+        return str(self.client.get_build_info(job, build_number)['result'])
 
     def get_sub_jobs(self, job):
         """Given a job name, it returns a list of sub jobs
@@ -128,6 +125,8 @@ class JenkinsClient(object):
             for sub_job in job_info['lastCompletedBuild']['subBuilds']:
                 sub_jobs.append({sub_job['jobName']: {}})
                 sub_jobs[-1][sub_job['jobName']]['status'] = sub_job['result']
+                sub_jobs[-1][sub_job['jobName']]['duration'] = sub_job['duration']
+                sub_jobs[-1][sub_job['jobName']]['buildNumber'] = sub_job['buildNumber']
 
             return sub_jobs
 
@@ -139,5 +138,4 @@ class JenkinsClient(object):
         
         output of the build.
         """
-
-        return self.client.get_build_console_output(job, build_number)
+        return self.client.get_build_console_output(job, int(build_number))
