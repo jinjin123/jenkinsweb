@@ -18,7 +18,8 @@
 
   <script type=text/javascript>
     $(function() {
-      $('a#get_output').bind('click', function() {
+		<!--   $('a#get_output').bind('click', function() { -->
+		$('button#add_bug').bind('click', function()
         $.getJSON('/get_console_output', {
           job_name: $(this).attr('job_name'),
           build_number: $(this).attr('build_number')
@@ -29,6 +30,21 @@
         return false;
       });
     });
+
+
+    $(function() {
+      $('button#add_bug').bind('click', function() {
+        $.getJSON('/add_bug', {
+          job_name: $(this).attr('job_name'),
+          build_number: $(this).attr('build_number')
+        }, function(data) {
+		  $("#output_div").show();
+          $("#output").text(data.output);
+        });
+        return false;
+      });
+    });
+
   </script>
 
 
@@ -45,6 +61,7 @@
             <th>Build number</th>
             <th>Build time</th>
             <th>Result</th>
+            <th>Bugs</th>
             <th>Sub Jobs</th>
         </tr>
     </thead>
@@ -55,6 +72,7 @@
 			<td class="col-md-1">{{ job.build_number }}</td>
 			<td class="col-md-1">{{ job.build_time|default('-') }}</td>
 			<td class="col-md-1"><a id="get_output" job_name="{{ job.name }}" build_number="{{ job.build }}" class="btn {{ job.button_status }} btn-large" href=#>{{ job.status }}</a></td>
+			<td class="col-md-1"><button id="add_bug" job_name="{{ job.name }}" type="button" class="btn btn-danger">+</button></td>
             <td class="col-md-1">
 				<button type="button" class="btn btn-info" data-toggle="collapse" data-target=".coll{{ job.id }}">Show</button>
             </td>
@@ -70,7 +88,6 @@
 		{% endfor %}
     </tbody>
     </table>
-
 
 	  <div style="display:none;" id="output_div" class="container">
 		  <h2>Output</h2>
