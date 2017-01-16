@@ -133,3 +133,25 @@ td a {
 .facts table, .facts th, .facts td {
     text-align: center;
 }
+
+.remove {
+    background: #C76868;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 21px;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 100%;   
+	border: 0;
+}
+
+.confirm {
+    background: #5cb85c;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 21px;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 100%;   
+	border: 0;
+}

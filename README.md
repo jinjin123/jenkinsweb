@@ -1,7 +1,9 @@
 Jino
 ====
 
-Jino is a web application, used for managing and monitoring Jenkins jobs.
+Jino is a web application, used for managing Jenkins jobs and OpenStack deployments.
+
+<div align="center"><img src="./doc/jino_main_page.png" alt="Jino Main Page" width="800"></div><hr />
 
 Installation
 ------------
