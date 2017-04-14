@@ -14,25 +14,19 @@
 import argparse
 
 
-def create_runserver_parser(subparsers, parent_parser):
+def create_runserver_subparser(subparsers, parent_parser):
     """Adds sub-parser for 'runserver'."""
 
     runserver_parser = subparsers.add_parser(
         "runserver", parents=[parent_parser])
 
     runserver_parser.add_argument(
-        '--jenkins', '-j', dest="jenkins", help='Jenkins URL')
-    runserver_parser.add_argument(
-        '--username', '-u', dest="username", help='Jenkins username')
-    runserver_parser.add_argument(
-        '--password', '-p', dest="password", help='Jenkins user password')
-    runserver_parser.add_argument(
         '--conf', '-c', dest="config", help='Jino configuration')
     runserver_parser.add_argument(
-        '--jobs', dest="jobs", help='Jenkins Jobs YAML', required=True)
+        '--jobs', dest="jobs", help='Jenkins Jobs YAML')
 
 
-def create_drop_parser(subparsers, parent_parser):
+def create_drop_subparser(subparsers, parent_parser):
     """Adds sub-parser for 'drop'."""
 
     subparsers.add_parser("drop", parents=[parent_parser])
@@ -48,7 +42,7 @@ def create():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="parser")
 
-    create_runserver_parser(subparsers, parent_parser)
-    create_drop_parser(subparsers, parent_parser)
+    create_runserver_subparser(subparsers, parent_parser)
+    create_drop_subparser(subparsers, parent_parser)
 
     return parser

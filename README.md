@@ -1,46 +1,48 @@
 Jino
 ====
 
-Jino is a web application, used for managing Jenkins jobs and OpenStack deployments.
+NOTE: The project is in the middle of a refactor process. It's NOT USABLE at the moment.
+
+Jino is a web server for managing single or multiple Jenkins instances.
+
+It allows you to:
+
+    * Display jobs from multiple Jenkins instances
 
 <div align="center"><img src="./doc/jino_main_page.png" alt="Jino Main Page" width="800"></div><hr />
 
 Installation
 ------------
 
-To install jino, run the following command:
+The short way:
 
-    sudo pip install jino
+    chmod +x quick_setup.sh && ./quick_setup.sh
+
+The "long" way:
+
+    virtualenv .venv && source .venv/bin/activate
+    pip install .
 
 Running the server
 ------------------
 
-Jino requires several arguments in order to run properly:
+To run Jino:
 
-* Jenkins URL   - the url of your Jenkins server (e.g http://my_jenkins)
-* Username      - Jenkins username
-* Password      - Jenkins password
-* Jobs YAML - Jino will build the home page tables based on this file
-
-To run Jino::
-
-    jino runserver --jenkins 'http://my_jenkins' --username X --password Y --jobs /etc/jobs.yaml
-
-OR
-
-    jino runserver --conf /etc/jino.cfg --jobs /etc/jobs.yaml
+    jino runserver --conf /etc/jino/jino.conf --jobs /etc/jobs.yaml
 
 
 Configuration
 -------------
 
-You must specify three variables:
+You must specify at least one server in the config file:
 
-     JENKINS = http://<your_jenkins_server>
-     USERNAME = <Jenkins user>
-     PASSWORD = <Jenkins user password>
+[server/jenkins1]
 
-The location specified by --conf. By default, Jino will look for /etc/jino/config.cfg.
+server = http://<jenkins_server>
+username = <Jenkins user>
+password = <Jenkins user password>
+
+The location of the config file specified by --conf. By default, Jino will look for /etc/jino/jino.conf
 
 
 Jobs
