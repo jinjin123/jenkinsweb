@@ -4,15 +4,14 @@
 
 <!-- Main container -->
 <br>
-<div class="container-fluid container-pf-nav-pf-vertical container-pf-nav-pf-vertical-with-secondary">
+<div class="container-fluid col-md-custom col-md-offset-custom">
   <div class="row text-center">
-	  <img src=static/logo/jino.png>
   </div>
 
 <br>
   <div class="container">
-  <div class="alert alert-success">
-    <strong>Connected to: </strong>{{ config['JENKINS'] }}
+  <div class="alert alert-warning">
+    <strong>No Active Agents!</strong>
   </div>
   </div>
 
@@ -30,7 +29,6 @@
         return false;
       });
     });
-
 
     $(function() {
       $('button#add_bug').bind('click', function() {
@@ -58,7 +56,6 @@
 
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-10 col-md-offset-1">
-      <h2><strong>Neutron</strong></h2>
 
       <table class="list table table-striped table-bordered table-condensed"
 			 data-toggle="table"

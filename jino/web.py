@@ -11,4 +11,23 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-__version__ = '0.0.1'
+from flask import Blueprint
+from flask import render_template
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+webapp = Blueprint('jino', __name__, static_folder='static')
+
+
+@webapp.route('/')
+def home():
+    """Home page."""
+    return render_template('home.html')
+
+
+@webapp.route('/agents')
+def agents():
+    """Agents page"""
+    return render_template('agent.html')

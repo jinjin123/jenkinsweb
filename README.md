@@ -1,5 +1,4 @@
-Jino
-====
+# Jino
 
 NOTE: The project is in the middle of a refactor process. It's NOT USABLE at the moment.
 
@@ -8,11 +7,13 @@ Jino is a web server for managing single or multiple Jenkins instances.
 It allows you to:
 
     * Display jobs from multiple Jenkins instances
+    
 
-<div align="center"><img src="./doc/jino_main_page.png" alt="Jino Main Page" width="800"></div><hr />
+* [Installation](#installation)
+* [Configuration](#configuration)
+* [Screenshots](#screenshots)
 
-Installation
-------------
+## Installation
 
 The short way:
 
@@ -23,47 +24,21 @@ The "long" way:
     virtualenv .venv && source .venv/bin/activate
     pip install .
 
-Running the server
-------------------
-
 To run Jino:
 
     jino runserver --conf /etc/jino/jino.conf --jobs /etc/jobs.yaml
 
-
 Configuration
 -------------
 
-You must specify at least one server in the config file:
+Jino uses the configuration mechanism offered by Flask.
 
-[server/jenkins1]
+In addition to the [built-in configuration offered by Flask](http://flask.pocoo.org/docs/config/#builtin-configuration-values) there's a number of jino specific ones as well:
 
-server = http://<jenkins_server>
-username = <Jenkins user>
-password = <Jenkins user password>
+| Name | Description |
+| ---- | ----------- |
+| `JINO_LOG_LEVEL` | The log level (INFO, DEBUG). | 
 
-The location of the config file specified by --conf. By default, Jino will look for /etc/jino/jino.conf
+## Screenshots
 
-
-Jobs
-----
-
-Using YAML format:
-
-    - table: neutron
-      jobs:
-		- title: "Title of the first row"
-		  name: "jenkins-job-name1"
-
-		- title: "Title of the second row"
-		  name: "jenkins-job-name2"
-
-The location specified by --jobs. By default, Jino will look for /etc/jino/jobs.yaml.
-
-
-Drop database tables
---------------------
-
-To drop all the tables, run:
-
-    jino drop
+<div align="center"><img src="./doc/jino_main_page.png" alt="Jino Main Page" width="800"></div><hr />

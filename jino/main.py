@@ -16,6 +16,7 @@ from gevent.pywsgi import WSGIServer
 import logging
 
 import jino.parser
+from jino.web import webapp
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ class Manager(object):
 
         config = self._load_config()
         self.app = self._create_app(config)
+        self.app.register_blueprint(webapp)
         self._setup_logging()
 
     def _create_app(self, config):
@@ -101,7 +103,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-# import jino.models as models
-# from jino.views import home
-# from jino.views import provision
