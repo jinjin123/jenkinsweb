@@ -1,4 +1,4 @@
-# Copyright 2016 Arie Bregman
+# Copyright 2017 Arie Bregman
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -11,16 +11,16 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+import jino.parser.web as web_parser
+import jino.web
 
-FAILURE_BUTTON = 'btn-danger'
-SUCCESS_BUTTON = 'btn-success'
 
+def main():
+    """Main entry for running the web server."""
 
-def get_button_status(status):
-    """Returns the bootstrap button class name
+    # Create parser
+    parser = web_parser.create()
+    args = parser.parse_args()
 
-    according to the actual status.
-    """
-    if status == 'SUCCESS':
-        return SUCCESS_BUTTON
-    return FAILURE_BUTTON
+    web_server = jino.web.Web(args)
+    web_server.run()

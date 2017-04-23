@@ -49,19 +49,16 @@ def get_jobs_status(server, jobs):
             for sub_job_dict in sub_jobs:
                 sub_job = sub_job_dict['jobName']
                 jobs_status[job]['sub_jobs'][sub_job] = {}
-                sub_last_build_num = server.get_job_info(
-                    sub_job)['lastCompletedBuild']['number']
-                sub_status = str(server.get_build_info(
-                    sub_job, sub_last_build_num)['result'])
 
                 if status == 'SUCCESS':
                     jobs_status[job]['sub_jobs'][sub_job]['status'] = 'success'
-                    jobs_status[job]['sub_jobs'][sub_job]['button'] = 'btn-success'
+                    jobs_status[job][
+                        'sub_jobs'][sub_job]['button'] = 'btn-success'
                 else:
                     jobs_status[job]['sub_jobs'][sub_job]['status'] = 'failure'
-                    jobs_status[job]['sub_jobs'][sub_job]['button'] = 'btn-danger'
-                    
-            #jobs_status[job]['subBuilds'] = [str(sub_job['jobName']) for sub_job in sub_jobs]
+                    jobs_status[job][
+                        'sub_jobs'][sub_job]['button'] = 'btn-danger'
+
             LOG.info("Got info for job: %s", job)
 
     except Exception as e:
@@ -70,21 +67,6 @@ def get_jobs_status(server, jobs):
         sys.exit(2)
 
     return jobs_status
-
-
-def get_job_detailed_result(server, job):
-    """Return detailed job result."""
-
-    last_build_num = server.get_job_info(
-        job)['lastCompletedBuild']['number']
-
-    output = server.get_build_console_output(job, last_build_num)
-
-    #failure_url = server_url + '/job/' + job + '/' + str(last_build_num) + '/api/xml?depth=2}'
-    #request = Request(failure_url)
-    #auth = '%s:%s' % (username, password)
-    #request.add_header('Authorization', auth)
-    #failure = urlopen(request).read()
 
 
 class JenkinsClient(object):
@@ -113,10 +95,10 @@ class JenkinsClient(object):
         dictionaries.
 
         [{'subJob_1': {'status': 'success'},
-         {'subJob_2': {'status': 'failure'}] 
+         {'subJob_2': {'status': 'failure'}]
 
         If no sub jobs exist it returns None"""
-         
+
         sub_jobs = []
         job_info = self.client.get_job_info(job)
 
@@ -124,9 +106,12 @@ class JenkinsClient(object):
 
             for sub_job in job_info['lastCompletedBuild']['subBuilds']:
                 sub_jobs.append({sub_job['jobName']: {}})
-                sub_jobs[-1][sub_job['jobName']]['status'] = sub_job['result']
-                sub_jobs[-1][sub_job['jobName']]['duration'] = sub_job['duration']
-                sub_jobs[-1][sub_job['jobName']]['buildNumber'] = sub_job['buildNumber']
+                sub_jobs[-1][sub_job[
+                    'jobName']]['status'] = sub_job['result']
+                sub_jobs[-1][sub_job[
+                    'jobName']]['duration'] = sub_job['duration']
+                sub_jobs[-1][sub_job[
+                    'jobName']]['buildNumber'] = sub_job['buildNumber']
 
             return sub_jobs
 
@@ -134,8 +119,8 @@ class JenkinsClient(object):
             return None
 
     def get_console_output(self, job, build_number):
-        """Given a job and a build number, returns the console 
-        
+        """Given a job and a build number, returns the console
+
         output of the build.
         """
         return self.client.get_build_console_output(job, int(build_number))

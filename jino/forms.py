@@ -20,5 +20,6 @@ from wtforms.validators import DataRequired
 
 class LoginForm(Form):
     openid = StringField('openid', validators=[DataRequired()])
-    language = SelectField(u'Programming Language', choices=[('two', '2'), ('three', '3'), ('four', '4')])
+    language = SelectField(u'Programming Language', choices=[(
+        'two', '2'), ('three', '3'), ('four', '4')])
     remember_me = BooleanField('Make it awesome', default=False)

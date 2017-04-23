@@ -1,9 +1,5 @@
+configparser
 flask
-Flask-Script
 Flask-SQLAlchemy
-Flask-WTF
 gevent
 python-jenkins
-sqlalchemy-migrate
-PyYaml
-six

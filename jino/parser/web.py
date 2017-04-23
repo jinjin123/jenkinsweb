@@ -1,4 +1,4 @@
-# Copyright 2016 Arie Bregman
+# Copyright 2017 Arie Bregman
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -26,21 +26,6 @@ def create_runserver_subparser(subparsers, parent_parser):
         '--jobs', dest="jobs", help='Jenkins Jobs YAML')
 
 
-def create_agent_subparser(subparsers, parent_parser):
-    """Adds agent sub-parser."""
-
-    agent_parser = subparsers.add_parser(
-        "agent", parents=[parent_parser])
-
-    agent_parser.add_argument('--url', '-u', dest='url', help="Jenkins URL")
-
-
-def create_drop_subparser(subparsers, parent_parser):
-    """Adds sub-parser for 'drop'."""
-
-    subparsers.add_parser("drop", parents=[parent_parser])
-
-
 def create():
     """Returns argparse parser."""
 
@@ -52,7 +37,5 @@ def create():
     subparsers = parser.add_subparsers(dest="parser")
 
     create_runserver_subparser(subparsers, parent_parser)
-    create_agent_subparser(subparsers, parent_parser)
-    create_drop_subparser(subparsers, parent_parser)
 
     return parser

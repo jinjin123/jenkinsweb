@@ -7,37 +7,40 @@ Jino is a web server for managing single or multiple Jenkins instances.
 It allows you to:
 
     * Display jobs from multiple Jenkins instances
-    
 
+* [Requirements](#requirements)
 * [Installation](#installation)
+* [Getting Started](#getting-started)
 * [Configuration](#configuration)
 * [Screenshots](#screenshots)
 
+## Requirements
+
+* Python >= 2.7
+
 ## Installation
-
-The short way:
-
-    chmod +x quick_setup.sh && ./quick_setup.sh
-
-The "long" way:
 
     virtualenv .venv && source .venv/bin/activate
     pip install .
 
-To run Jino:
+You can also run the quick setup script in this directory:
 
-    jino runserver --conf /etc/jino/jino.conf --jobs /etc/jobs.yaml
+    chmod +x quick_setup.sh && ./quick_setup.sh
 
-Configuration
--------------
+## Run Jino Web Application
 
-Jino uses the configuration mechanism offered by Flask.
+    jino-server runserver
 
-In addition to the [built-in configuration offered by Flask](http://flask.pocoo.org/docs/config/#builtin-configuration-values) there's a number of jino specific ones as well:
+## Run Jino Agent
 
-| Name | Description |
-| ---- | ----------- |
-| `JINO_LOG_LEVEL` | The log level (INFO, DEBUG). | 
+    jino-agent
+
+## Configuration 
+
+The default location for Jino configuration is '/etc/jino/jino.conf'.
+You can specify it by using the CLI: --conf <conf_file_path>
+
+You can find sample in samples/jino.conf
 
 ## Screenshots
 
