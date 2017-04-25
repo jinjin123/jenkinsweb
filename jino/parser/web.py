@@ -18,7 +18,7 @@ def create_runserver_subparser(subparsers, parent_parser):
     """Adds runserver sub-parser"""
 
     runserver_parser = subparsers.add_parser(
-        "runserver", parents=[parent_parser])
+        "run", parents=[parent_parser])
 
     runserver_parser.add_argument(
         '--conf', '-c', dest="config_file", help='Jino configuration')

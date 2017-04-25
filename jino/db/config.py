@@ -11,17 +11,8 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import jino.parser.web as web_parser
-import jino.web
+import os
 
-
-def main():
-    """Main entry for running the web server."""
-
-    # Create parser
-    parser = web_parser.create()
-    args = parser.parse_args()
-
-    # Run Webserver
-    web_server = jino.web.WebApp(args)
-    web_server.run()
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASEDIR, 'jino.db')
+SQLALCHEMY_MIGRATE_REPO = os.path.join(BASEDIR, 'db_repository')

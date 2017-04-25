@@ -13,15 +13,17 @@
 #    under the License.
 from configparser import ConfigParser
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from gevent.pywsgi import WSGIServer
 import logging
 import os
 
 from jino.views import webapp
+import jino.db.create as jino_db
 logger = logging.getLogger(__name__)
 
 
-class Web(object):
+class WebApp(object):
     """Jino Web Application."""
 
     DEFAULT_BIND_HOST = '0.0.0.0'
@@ -30,22 +32,34 @@ class Web(object):
 
     def __init__(self, args_ns):
 
-        # Loads configuartion based on passed user arguments
+        self._setup_logging()
+        self._setup_config(args_ns)
+        if self.config['DEBUG']:
+            self._update_logging_level(logging.DEBUG)
+        self.app = self.create_app(self.config)
+        self._setup_database()
+
+    def _setup_config(self, args_ns):
+        """Load configuration from different sources."""
         self.config = self._load_config_from_cli(args_ns)
         config_f = vars(args_ns)['config_file'] or self.DEFAULT_CONFIG_FILE
         if os.path.exists(config_f):
             self._load_config_from_file(config_f)
 
-        # Creates flask application and registers the blueprints
-        self.app = self.create_app(self.config)
-        self.app.register_blueprint(webapp)
+    def _setup_database(self):
+        """Set up the database.
 
-        self._setup_logging()
+        Creates all the tables.
+        """
+        self.db = SQLAlchemy(self.app)
+        jino_db.create_db(self.db, self.app.config)
 
     def create_app(self, config):
         """Returns Flask application."""
         app = Flask(__name__)
+        app.register_blueprint(webapp)
         app.config.update(config)
+        app.config.from_object('jino.db.config')
 
         return app
 
@@ -65,20 +79,24 @@ class Web(object):
 
     def _load_config_from_file(self, config_f):
         """Loads configuration from file."""
-        config_file = ConfigParser.ConfigParser()
-        config_file.read(config_f)
+        parser = ConfigParser()
+        parser.read(config_f)
 
-        for section in config_file.sections():
-            for option in config_file.options(section):
-                    self.config[option] = config_file.get(section, option)
+        for section in parser.sections():
+            for option in parser.options(section):
+                    self.config[option] = parser.get(section, option)
+        logger.info("Updated config from file: %s" % self.config)
 
     def _setup_logging(self):
         """Setup logging level."""
         format = '%(levelname)s: %(name)s | %(message)s'
-        level = logging.DEBUG if self.app.config.get(
-            'JINO_DEBUG') else logging.INFO
+        level = logging.INFO
         logging.basicConfig(level=level, format=format)
         logging.getLogger(__name__)
+
+    def _update_logging_level(self, logging_level):
+        """Update logging based on passed level."""
+        logging.basicConfig(level=logging_level)
 
     def run(self):
         """Runs the web server."""
