@@ -24,4 +24,5 @@ def main():
 
     # Run Webserver
     web_server = jino.web.WebApp(args)
+    web_server.setup_agents()
     web_server.run()

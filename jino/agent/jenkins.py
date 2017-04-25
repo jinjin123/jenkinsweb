@@ -11,10 +11,22 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+import time
+
 from jino.agent import agent
 
 
 class JenkinsAgent(agent.Agent):
 
-    def __init__(self):
-        super(JenkinsAgent, self).__init__()
+    def __init__(self, name, user, password, url):
+        super(JenkinsAgent, self).__init__(name)
+
+        self.user = user
+        self.password = password
+        self.url = url
+
+    def start(self):
+        """Start running the jenkins agent."""
+        while True:
+            print("Pulled data")
+            time.sleep(5)

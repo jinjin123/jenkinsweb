@@ -11,11 +11,16 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+import abc
+from multiprocessing import Process
 
 
 class Agent(object):
-    def __init__(self):
-        self._service = None
 
-    def _create_service(self):
-        raise NotImplementedError
+    def __init__(self, name):
+        self.name = name
+        self.process = Process(target=self.start)
+
+    @abc.abstractmethod
+    def start(self):
+        """Start service."""
