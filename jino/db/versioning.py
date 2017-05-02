@@ -11,8 +11,17 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from jino.db.base import db
+from migrate.versioning import api
+import os.path
 
 
-def setup():
-    db.create_all()
+def setup_versioning(config):
+    """Setup versioning for easy DB updates."""
+    if not os.path.exists(config['SQLALCHEMY_MIGRATE_REPO']):
+        api.create(config['SQLALCHEMY_MIGRATE_REPO'], 'database repository')
+        api.version_control(config['SQLALCHEMY_DATABASE_URI'],
+                            config['SQLALCHEMY_MIGRATE_REPO'])
+    else:
+        api.version_control(config['SQLALCHEMY_DATABASE_URI'],
+                            config['SQLALCHEMY_MIGRATE_REPO'],
+                            api.version(config['SQLALCHEMY_MIGRATE_REPO']))

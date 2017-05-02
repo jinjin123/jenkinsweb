@@ -11,16 +11,19 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-import abc
-from multiprocessing import Process
 
 
-class Agent(object):
+def get_last_build_number(job_info):
+        """Given a job info dict, returns the last build number."""
+        if job_info['lastCompletedBuild']:
+            return job_info['lastCompletedBuild']['number']
+        else:
+            return 0
 
-    def __init__(self, name):
-        self.name = name
-        self.run_process = Process(target=self.start)
 
-    @abc.abstractmethod
-    def start(self):
-        """Start service."""
+def get_build_result(conn, job_name, build_number):
+        """Given a Jenkins connection and job name, it returns string of
+
+        the last completed build result.
+        """
+        return str(conn.get_build_info(job_name, build_number)['result'])

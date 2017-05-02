@@ -1,15 +1,12 @@
 # Jino
 
-![TravisCI](https://travis-ci.org/bregman-arie/jino.svg)
-https://travis-ci.org/bregman-arie/jino
-
-NOTE: The project is in the middle of a refactor process. It's NOT USABLE at the moment.
+[![Build Status](https://travis-ci.org/bregman-arie/jino.svg?branch=master)](https://travis-ci.org/bregman-arie/jino)
 
 Jino is a web server for managing single or multiple Jenkins instances.
 
 It allows you to:
 
-    * Display jobs from multiple Jenkins instances
+    * Query jobs from multiple Jenkins instances based on different parameters
 
 * [Requirements](#requirements)
 * [Installation](#installation)

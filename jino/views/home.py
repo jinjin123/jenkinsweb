@@ -11,36 +11,22 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from flask import Blueprint
-from flask import current_app
-from flask import jsonify
 from flask import render_template
-from flask import request
+from flask import Blueprint
 import logging
+
+import jino.models.job as job_model
+import jino.models.agent as agent_model
 
 
 logger = logging.getLogger(__name__)
 
-webapp = Blueprint('jino', __name__, static_folder='static')
+home = Blueprint('home', __name__)
 
 
-@webapp.route('/')
-def home():
+@home.route('/')
+def index():
     """Home page."""
-    return render_template('home.html')
-
-
-@webapp.route('/agents')
-def agents():
-    """Agents page"""
-    return render_template('agent.html')
-
-
-@webapp.route('/register')
-def register_jenkins():
-    name = request.args['name']
-    port = request.args['port']
-    host = request.remote_addr
-
-    current_app.jino.register_jenkins(name, host, port)
-    return jsonify({'status': 'OK'})
+    jobs = job_model.Job.query
+    agents = agent_model.Agent.query.all()
+    return render_template('home.html', jobs=jobs, agents=agents)

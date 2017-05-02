@@ -8,12 +8,14 @@
   <div class="row text-center">
   </div>
 
+{% if agents is defined and not agents %}
 <br>
   <div class="container">
   <div class="alert alert-warning">
-    <strong>No Active Agents Found!</strong>
+    <strong>No Active Agents Found!. Please add agents in Jino config. You can have a look on samples/jino.conf</strong>
   </div>
   </div>
+{% endif %}
 
   <script type=text/javascript>
         $(function() {
@@ -46,23 +48,23 @@
   </script>
 
 <!--
-  <div ng-app="bug" ng-controller="BugCtrl"> <button class="addfields" ng-click="addNewBug()">Add fields</button> 
-	  <fieldset  data-ng-repeat="choice in choices">
-		       <input type="text" ng-model="choice.name" name="" placeholder="Enter mobile number">
-	         <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-      </fieldset>
-  </div>
--->
 
-<div class="list-group list-view-pf">
-  <div class="list-group-item list-view-pf-stacked">
-    <div class="list-view-pf-actions">
-      <button class="btn btn-default">Action</button>
-      <div class="dropdown pull-right dropdown-kebab-pf">
-  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight15" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+<div class="list-group list-view-pf list-view-pf-view">
+  <div class="list-group-item">
+    <div class="list-group-item-header">
+      <div class="list-view-pf-expand">
+        <span class="fa fa-angle-right"></span>
+      </div>
+      <div class="list-view-pf-checkbox">
+        <input type="checkbox">
+      </div>
+      <div class="list-view-pf-actions">
+        <button class="btn btn-default">Action</button>
+        <div class="dropdown pull-right dropdown-kebab-pf">
+  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight9" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
     <span class="fa fa-ellipsis-v"></span>
   </button>
-  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight15">
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight9">
     <li><a href="#">Action</a></li>
     <li><a href="#">Another action</a></li>
     <li><a href="#">Something else here</a></li>
@@ -71,189 +73,1040 @@
   </ul>
 </div>
 
-    </div>
-    <div class="list-view-pf-main-info">
-      <div class="list-view-pf-left">
-        <span class="fa pficon-ok list-view-pf-icon-lg"></span>
+{% for job in jobs %}
+
       </div>
-      <div class="list-view-pf-body">
-        <div class="list-view-pf-description">
-          <div class="list-group-item-heading">
-            DFG-network-neutron-awesome-job
-            <small>Date creation: blabla</small>
+      <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+          <span class="fa fa-plane list-view-pf-icon-sm"></span>
+        </div>
+        <div class="list-view-pf-body">
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              {{ job.name }}
+            </div>
+            <div class="list-group-item-text">
+              The following snippet of text is <a href="#">rendered as link text</a>.
+            </div>
           </div>
-          <div class="list-group-item-text">
-            The following snippet of text is <a href="#">rendered as link text</a>.
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-screen"></span>
+              <strong>8</strong> Hosts
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-cluster"></span>
+              <strong>6</strong> Clusters
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-container-node"></span>
+              <strong>10</strong> Nodes
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-image"></span>
+              <strong>8</strong> Images
+            </div>
           </div>
         </div>
-        <div class="list-view-pf-additional-info">
-          <div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-donut-chart">
-              <span id="donut-chart-5"></span>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div id="utilizationDonutChart1" class="example-donut-chart-utilization"></div>
+<script>
+  var c3ChartDefaults = $().c3ChartDefaults();
+  var utilizationDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('A');
+  utilizationDonutChartConfig.bindto = '#utilizationDonutChart1';
+  utilizationDonutChartConfig.data = {
+    type: "donut",
+    columns: [
+      ["Used", 60],
+      ["Available", 40]
+    ],
+    groups: [
+      ["used", "available"]
+    ],
+    order: null
+  };
+  utilizationDonutChartConfig.size = {
+    width: 200,
+    height: 171
+  };
+
+  utilizationDonutChartConfig.tooltip = {
+    contents: $().pfGetUtilizationDonutTooltipContentsFn('MHz')
+  };
+  var utilizationDonutChart = c3.generate(utilizationDonutChartConfig);
+  $().pfSetDonutChartTitle("#utilizationDonutChart1", "60", "MHz Used");
+</script>
+
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Host Name</dt>
+            <dd>Hostceph1</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list-group-item">
+    <div class="list-group-item-header">
+      <div class="list-view-pf-expand">
+        <span class="fa fa-angle-right"></span>
+      </div>
+      <div class="list-view-pf-checkbox">
+        <input type="checkbox">
+      </div>
+      <div class="list-view-pf-actions">
+        <button class="btn btn-default">Action</button>
+        <div class="dropdown pull-right dropdown-kebab-pf">
+  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="fa fa-ellipsis-v"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight10">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+
+{% endfor %}
+
+      </div>
+      <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+          <span class="fa fa-magic list-view-pf-icon-sm"></span>
+        </div>
+        <div class="list-view-pf-body">
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              Event Two
+            </div>
+            <div class="list-group-item-text">
+              The following snippet of text is <a href="#">rendered as link text</a>.
+            </div>
           </div>
-          <div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-donut-chart">
-              <span id="donut-chart-6"></span>
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-screen"></span>
+              <strong>4</strong> Hosts
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-cluster"></span>
+              <strong>2</strong> Clusters
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-container-node"></span>
+              <strong>11</strong> Nodes
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-image"></span>
+              <strong>6</strong> Images
+            </div>
           </div>
-          <div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-donut-chart">
-              <span id="donut-chart-7"></span>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div id="utilizationDonutChart2" class="example-donut-chart-utilization"></div>
+<script>
+  var c3ChartDefaults = $().c3ChartDefaults();
+  var utilizationDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('A');
+  utilizationDonutChartConfig.bindto = '#utilizationDonutChart2';
+  utilizationDonutChartConfig.data = {
+    type: "donut",
+    columns: [
+      ["Used", 60],
+      ["Available", 40]
+    ],
+    groups: [
+      ["used", "available"]
+    ],
+    order: null
+  };
+  utilizationDonutChartConfig.size = {
+    width: 200,
+    height: 171
+  };
+
+  utilizationDonutChartConfig.tooltip = {
+    contents: $().pfGetUtilizationDonutTooltipContentsFn('MHz')
+  };
+  var utilizationDonutChart = c3.generate(utilizationDonutChartConfig);
+  $().pfSetDonutChartTitle("#utilizationDonutChart2", "60", "MHz Used");
+</script>
+
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Host Name</dt>
+            <dd>Hostceph1</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list-group-item">
+    <div class="list-group-item-header">
+      <div class="list-view-pf-expand">
+        <span class="fa fa-angle-right"></span>
+      </div>
+      <div class="list-view-pf-checkbox">
+        <input type="checkbox">
+      </div>
+      <div class="list-view-pf-actions">
+        <button class="btn btn-default">Action</button>
+        <div class="dropdown pull-right dropdown-kebab-pf">
+  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight11" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="fa fa-ellipsis-v"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight11">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+          <span class="fa fa-gamepad list-view-pf-icon-sm"></span>
+        </div>
+        <div class="list-view-pf-body">
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              Event Three
+            </div>
+            <div class="list-group-item-text">
+              The following snippet of text is <a href="#">rendered as link text</a>.
+            </div>
           </div>
-          <div class="list-view-pf-additional-info-item list-view-pf-additional-info-item-donut-chart">
-              <span id="donut-chart-8"></span>
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-screen"></span>
+              <strong>4</strong> Hosts
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-cluster"></span>
+              <strong>2</strong> Clusters
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-container-node"></span>
+              <strong>10</strong> Nodes
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-image"></span>
+              <strong>6</strong> Images
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div id="utilizationDonutChart3" class="example-donut-chart-utilization"></div>
+<script>
+  var c3ChartDefaults = $().c3ChartDefaults();
+  var utilizationDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('A');
+  utilizationDonutChartConfig.bindto = '#utilizationDonutChart3';
+  utilizationDonutChartConfig.data = {
+    type: "donut",
+    columns: [
+      ["Used", 60],
+      ["Available", 40]
+    ],
+    groups: [
+      ["used", "available"]
+    ],
+    order: null
+  };
+  utilizationDonutChartConfig.size = {
+    width: 200,
+    height: 171
+  };
+
+  utilizationDonutChartConfig.tooltip = {
+    contents: $().pfGetUtilizationDonutTooltipContentsFn('MHz')
+  };
+  var utilizationDonutChart = c3.generate(utilizationDonutChartConfig);
+  $().pfSetDonutChartTitle("#utilizationDonutChart3", "60", "MHz Used");
+</script>
+
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Host Name</dt>
+            <dd>Hostceph1</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list-group-item">
+    <div class="list-group-item-header">
+      <div class="list-view-pf-expand">
+        <span class="fa fa-angle-right"></span>
+      </div>
+      <div class="list-view-pf-checkbox">
+        <input type="checkbox">
+      </div>
+      <div class="list-view-pf-actions">
+        <button class="btn btn-default">Action</button>
+        <div class="dropdown pull-right dropdown-kebab-pf">
+  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight12" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="fa fa-ellipsis-v"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight12">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+          <span class="fa fa-linux list-view-pf-icon-sm"></span>
+        </div>
+        <div class="list-view-pf-body">
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              Event Four
+            </div>
+            <div class="list-group-item-text">
+              The following snippet of text is <a href="#">rendered as link text</a>.
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-screen"></span>
+              <strong>4</strong> Hosts
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-cluster"></span>
+              <strong>2</strong> Clusters
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-container-node"></span>
+              <strong>10</strong> Nodes
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-image"></span>
+              <strong>6</strong> Images
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div id="utilizationDonutChart4" class="example-donut-chart-utilization"></div>
+<script>
+  var c3ChartDefaults = $().c3ChartDefaults();
+  var utilizationDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('A');
+  utilizationDonutChartConfig.bindto = '#utilizationDonutChart4';
+  utilizationDonutChartConfig.data = {
+    type: "donut",
+    columns: [
+      ["Used", 60],
+      ["Available", 40]
+    ],
+    groups: [
+      ["used", "available"]
+    ],
+    order: null
+  };
+  utilizationDonutChartConfig.size = {
+    width: 200,
+    height: 171
+  };
+
+  utilizationDonutChartConfig.tooltip = {
+    contents: $().pfGetUtilizationDonutTooltipContentsFn('MHz')
+  };
+  var utilizationDonutChart = c3.generate(utilizationDonutChartConfig);
+  $().pfSetDonutChartTitle("#utilizationDonutChart4", "60", "MHz Used");
+</script>
+
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Host Name</dt>
+            <dd>Hostceph1</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list-group-item">
+    <div class="list-group-item-header">
+      <div class="list-view-pf-expand">
+        <span class="fa fa-angle-right"></span>
+      </div>
+      <div class="list-view-pf-checkbox">
+        <input type="checkbox">
+      </div>
+      <div class="list-view-pf-actions">
+        <button class="btn btn-default">Action</button>
+        <div class="dropdown pull-right dropdown-kebab-pf">
+  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight13" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="fa fa-ellipsis-v"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight13">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+          <span class="fa fa-briefcase list-view-pf-icon-sm"></span>
+        </div>
+        <div class="list-view-pf-body">
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              Event Five
+            </div>
+            <div class="list-group-item-text">
+              The following snippet of text is <a href="#">rendered as link text</a>.
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-screen"></span>
+              <strong>4</strong> Hosts
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-cluster"></span>
+              <strong>2</strong> Clusters
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-container-node"></span>
+              <strong>10</strong> Nodes
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-image"></span>
+              <strong>6</strong> Images
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div id="utilizationDonutChart5" class="example-donut-chart-utilization"></div>
+<script>
+  var c3ChartDefaults = $().c3ChartDefaults();
+  var utilizationDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('A');
+  utilizationDonutChartConfig.bindto = '#utilizationDonutChart5';
+  utilizationDonutChartConfig.data = {
+    type: "donut",
+    columns: [
+      ["Used", 60],
+      ["Available", 40]
+    ],
+    groups: [
+      ["used", "available"]
+    ],
+    order: null
+  };
+  utilizationDonutChartConfig.size = {
+    width: 200,
+    height: 171
+  };
+
+  utilizationDonutChartConfig.tooltip = {
+    contents: $().pfGetUtilizationDonutTooltipContentsFn('MHz')
+  };
+  var utilizationDonutChart = c3.generate(utilizationDonutChartConfig);
+  $().pfSetDonutChartTitle("#utilizationDonutChart5", "60", "MHz Used");
+</script>
+
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Host Name</dt>
+            <dd>Hostceph1</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list-group-item">
+    <div class="list-group-item-header">
+      <div class="list-view-pf-expand">
+        <span class="fa fa-angle-right"></span>
+      </div>
+      <div class="list-view-pf-checkbox">
+        <input type="checkbox">
+      </div>
+      <div class="list-view-pf-actions">
+        <button class="btn btn-default">Action</button>
+        <div class="dropdown pull-right dropdown-kebab-pf">
+  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebabRight14" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="fa fa-ellipsis-v"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight14">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
+
+
+
+      </div>
+      <div class="list-view-pf-main-info">
+        <div class="list-view-pf-left">
+          <span class="fa fa-coffee list-view-pf-icon-sm"></span>
+        </div>
+        <div class="list-view-pf-body">
+          <div class="list-view-pf-description">
+            <div class="list-group-item-heading">
+              Event Six
+            </div>
+            <div class="list-group-item-text">
+              The following snippet of text is <a href="#">rendered as link text</a>.
+            </div>
+          </div>
+          <div class="list-view-pf-additional-info">
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-screen"></span>
+              <strong>4</strong> Hosts
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-cluster"></span>
+              <strong>2</strong> Clusters
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-container-node"></span>
+              <strong>10</strong> Nodes
+            </div>
+            <div class="list-view-pf-additional-info-item">
+              <span class="pficon pficon-image"></span>
+              <strong>6</strong> Images
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-group-item-container container-fluid hidden">
+      <div class="close">
+        <span class="pficon pficon-close"></span>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div id="utilizationDonutChart6" class="example-donut-chart-utilization"></div>
+<script>
+  var c3ChartDefaults = $().c3ChartDefaults();
+  var utilizationDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('A');
+  utilizationDonutChartConfig.bindto = '#utilizationDonutChart6';
+  utilizationDonutChartConfig.data = {
+    type: "donut",
+    columns: [
+      ["Used", 60],
+      ["Available", 40]
+    ],
+    groups: [
+      ["used", "available"]
+    ],
+    order: null
+  };
+  utilizationDonutChartConfig.size = {
+    width: 200,
+    height: 171
+  };
+
+  utilizationDonutChartConfig.tooltip = {
+    contents: $().pfGetUtilizationDonutTooltipContentsFn('MHz')
+  };
+  var utilizationDonutChart = c3.generate(utilizationDonutChartConfig);
+  $().pfSetDonutChartTitle("#utilizationDonutChart6", "60", "MHz Used");
+</script>
+
+        </div>
+        <div class="col-md-9">
+          <dl class="dl-horizontal">
+            <dt>Host Name</dt>
+            <dd>Hostceph1</dd>
+            <dt>Device Path</dt>
+            <dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd>
+            <dt>Time</dt>
+            <dd>January 15, 2016 10:45:11 AM</dd>
+            <dt>Severity</dt>
+            <dd>Warning</dd>
+            <dt>Cluster</dt>
+            <dd>Cluster 1</dd>
+          </dl>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
         </div>
       </div>
     </div>
   </div>
 </div>
 <script>
-  // Donut Charts
-  var c3ChartDefaults = $().c3ChartDefaults();
-  var customDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('34%');
-  customDonutChartConfig.size.height = 71;
-  customDonutChartConfig.size.width = 60;
-  customDonutChartConfig.donut.width = 5;
-  customDonutChartConfig.bindto = '#donut-chart-5';
-  customDonutChartConfig.data = {
-    type: "donut",
-    columns: [
-      ["Used", 34],
-      ["Available", 86]
-    ],
-    groups: [
-      ["used", "available"]
-    ],
-    order: null
-  };
-  c3.generate(customDonutChartConfig);
-  var donutChartTitle = d3.select("#donut-chart-5").select('text.c3-chart-arcs-title');
-  donutChartTitle.text("");
-  donutChartTitle.insert('tspan').text("34%").classed('list-view-donut-title', true);
+  $(document).ready(function () {
+    // Row Checkbox Selection
+    $("input[type='checkbox']").change(function (e) {
+      if ($(this).is(":checked")) {
+        $(this).closest('.list-group-item').addClass("active");
+      } else {
+        $(this).closest('.list-group-item').removeClass("active");
+      }
+    });
+    // toggle dropdown menu
+    $('.list-view-pf-actions').on('show.bs.dropdown', function () {
+      var $this = $(this);
+      var $dropdown = $this.find('.dropdown');
+      var space = $(window).height() - $dropdown[0].getBoundingClientRect().top - $this.find('.dropdown-menu').outerHeight(true);
+      $dropdown.toggleClass('dropup', space < 10);
+    });
 
-  customDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('21%');
-  customDonutChartConfig.size.height = 71;
-  customDonutChartConfig.size.width = 60;
-  customDonutChartConfig.donut.width = 5;
-  customDonutChartConfig.bindto = '#donut-chart-6';
-  customDonutChartConfig.data = {
-    type: "donut",
-    columns: [
-      ["Used", 21],
-      ["Available", 79]
-    ],
-    groups: [
-      ["used", "available"]
-    ],
-    order: null
-  };
-  c3.generate(customDonutChartConfig);
-  donutChartTitle = d3.select("#donut-chart-6").select('text.c3-chart-arcs-title');
-  donutChartTitle.text("");
-  donutChartTitle.insert('tspan').text("21%").classed('list-view-donut-title', true);
+    // click the list-view heading then expand a row
+    $(".list-group-item-header").click(function(event){
+      if(!$(event.target).is("button, a, input, .fa-ellipsis-v")){
+        $(this).find(".fa-angle-right").toggleClass("fa-angle-down")
+          .end().parent().toggleClass("list-view-pf-expand-active")
+            .find(".list-group-item-container").toggleClass("hidden");
+      } else {
+      }
+    })
 
-  customDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('14%');
-  customDonutChartConfig.size.height = 71;
-  customDonutChartConfig.size.width = 60;
-  customDonutChartConfig.donut.width = 5;
-  customDonutChartConfig.bindto = '#donut-chart-7';
-  customDonutChartConfig.data = {
-    type: "donut",
-    columns: [
-      ["Used", 14],
-      ["Available", 86]
-    ],
-    groups: [
-      ["used", "available"]
-    ],
-    order: null
-  };
-  c3.generate(customDonutChartConfig);
-  donutChartTitle = d3.select("#donut-chart-7").select('text.c3-chart-arcs-title');
-  donutChartTitle.text("");
-  donutChartTitle.insert('tspan').text("14%").classed('list-view-donut-title', true);
+    // click the close button, hide the expand row and remove the active status
+    $(".list-group-item-container .close").on("click", function (){
+      $(this).parent().addClass("hidden")
+        .parent().removeClass("list-view-pf-expand-active")
+          .find(".fa-angle-right").removeClass("fa-angle-down");
+    })
 
-  customDonutChartConfig = c3ChartDefaults.getDefaultDonutConfig('25%');
-  customDonutChartConfig.size.height = 71;
-  customDonutChartConfig.size.width = 60;
-  customDonutChartConfig.donut.width = 5;
-  customDonutChartConfig.bindto = '#donut-chart-8';
-  customDonutChartConfig.data = {
-    type: "donut",
-    columns: [
-      ["Used", 25],
-      ["Available", 75]
-    ],
-    groups: [
-      ["used", "available"]
-    ],
-    order: null
-  };
-  c3.generate(customDonutChartConfig);
-  donutChartTitle = d3.select("#donut-chart-8").select('text.c3-chart-arcs-title');
-  donutChartTitle.text("");
-  donutChartTitle.insert('tspan').text("25%").classed('list-view-donut-title', true);
+  });
 </script>
 
+//-->
+<!-- -->
 
-  <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-10 col-md-offset-1">
+<!-- Toolbar -->
+<div class="row toolbar-pf table-view-pf-toolbar" id="toolbar1">
+  <div class="col-sm-12">
+    <form class="toolbar-pf-actions">
+      <div class="form-group toolbar-pf-filter">
+        <label class="sr-only" for="filter">Job Name</label>
+        <div class="input-group">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" id="filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Job Name <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#" id="filter1">Job Name</a></li>
+              <li><a href="#" id="filter2">Last build number</a></li>
+              <li><a href="#" id="filter3">Last build result</a></li>
+              <li><a href="#" id="filter4">Jenkins Server</a></li>
+            </ul>
+          </div>
+          <input type="text" class="form-control" placeholder="Filter By Job Name..." autocomplete="off" id="filterInput">
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-default" type="button" id="deleteRows1">Delete Rows</button>
+        <button class="btn btn-default" type="button" id="restoreRows1" disabled>Restore Rows</button>
+        <div class="dropdown btn-group  dropdown-kebab-pf">
+  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownKebab" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    <span class="fa fa-ellipsis-v"></span>
+  </button>
+  <ul class="dropdown-menu " aria-labelledby="dropdownKebab">
+    <li><a href="#">Action</a></li>
+    <li><a href="#">Another action</a></li>
+    <li><a href="#">Something else here</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="#">Separated link</a></li>
+  </ul>
+</div>
 
-      <table class="list table table-striped table-bordered table-condensed"
-			 data-toggle="table"
-	         data-show-export="true">
-    <thead>
-        <tr>
-            <th>Job Name</th>
-            <th>Build number</th>
-            <th>Build time</th>
-            <th>Result</th>
-            <th>Bugs</th>
-            <th>Sub Jobs</th>
-        </tr>
-    </thead>
-    <tbody ng-app="bug">
-		{% for job in jobs %}
-        <tr>
-			<td class="col-md-2">{{ job.name }}</td>
-			<td class="col-md-1">{{ job.build_number }}</td>
-			<td class="col-md-1">{{ job.build_time|default('-') }}</td>
-			<td class="col-md-1"><a id="get_output" job_name="{{ job.name }}" build_number="{{ job.build }}" class="btn {{ job.button_status }} btn-large" href=#>{{ job.status }}</a></td>
-			<td class="col-md-1">
-	            <div ng-controller="BugCtrl">
-				<button ng-click="addNewBug()" id="add_bug" job_name="{{ job.name }}" type="button" class="btn btn-info">+</button>
-				<br><br>
-				<fieldset data-ng-repeat="choice in choices">
-				<input type="text" style="width:105px" ng-model="choice.name" name="" placeholder="Bugzilla number">
-				<button class="remove"  ng-click="removeChoice($index)"><span class="pficon fa-close"></span></button>
-				<button class="confirm" ng-click="confirmChoice($index)"><span class="pficon fa-check"></span></button>
-				</fieldset>
-               {{ choices }}
-	           </div>
-			</td>
-
-            <td class="col-md-1">
-				<button type="button" class="btn btn-info" data-toggle="collapse" data-target=".coll{{ job.id }}">Show</button>
-            </td>
-        </tr>
-					{% for sub_job in job.sub_jobs %}
-					<tr class="collapse out budgets coll{{ job.id }}">
-						<td class="bg-info hiddenRow">{{ sub_job.name }}</td>
-						<td class="bg-info hiddenRow">{{ sub_job.build_number }}</td>
-						<td class="bg-info hiddenRow">{{ sub_job.build_duration }}</td>
-						<td class="bg-info hiddenRow"><a class="btn {{ sub_job.button_status }} btn-large" href="result/{{ sub_job.name }}">{{ sub_job.status }}</a></td>
-        </tr>
-			        {% endfor %}
-		{% endfor %}
-    </tbody>
-    </table>
-
-	  <div style="display:none;" id="output_div" class="container">
-		  <h2>Output</h2>
-		  <div class="alert alert-info">
-			  <pre id="output"></pre>
-		  </div>
-	  </div>
-
+      </div>
+      <div class="toolbar-pf-action-right">
+        <div class="form-group toolbar-pf-find">
+          <button class="btn btn-link btn-find" type="button">
+            <span class="fa fa-search"></span>
+          </button>
+          <div class="find-pf-dropdown-container">
+            <input type="text" class="form-control" id="find" placeholder="Find By Keyword...">
+            <div class="find-pf-buttons">
+              <span class="find-pf-nums">1 of 3</span>
+              <button class="btn btn-link" type="button">
+                <span class="fa fa-angle-up"></span>
+              </button>
+              <button class="btn btn-link" type="button">
+                <span class="fa fa-angle-down"></span>
+              </button>
+              <button class="btn btn-link btn-find-close" type="button">
+                <span class="pficon pficon-close"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row toolbar-pf-results">
+      <div class="col-sm-9">
+        <div class="hidden">
+          <h5>0 Results</h5>
+          <p>Active filters:</p>
+          <ul class="list-inline"></ul>
+          <p><a href="#">Clear All Filters</a></p>
+        </div>
+      </div>
+      <div class="col-sm-3 table-view-pf-select-results">
+        <strong>0</strong> of <strong>0</strong> selected
+      </div>
     </div>
   </div>
 </div>
 
+<!-- Table HTML -->
+<table class="table table-striped table-bordered table-hover" id="table1">
+  <thead>
+    <tr>
+      <th><label class="sr-only" for="selectAll">Select all rows</label><input type="checkbox" id="selectAll" name="selectAll"></th>
+      <th>Job Name</th>
+      <th>Last build number</th>
+      <th>Last build result</th>
+      <th>Jenkins Server</th>
+      <th colspan="2">Actions</th>
+    </tr>
+  </thead>
+</table>
+
+<form class="content-view-pf-pagination table-view-pf-pagination clearfix" id="pagination1">
+  <div class="form-group">
+    <select class="selectpicker pagination-pf-pagesize">
+      <option value="6">6</option>
+      <option value="10" >10</option>
+      <option value="15" selected="selected">15</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+    </select>
+    <span>per page</span>
+  </div>
+  <div class="form-group">
+    <span><span class="pagination-pf-items-current">1-15</span> of <span class="pagination-pf-items-total">75</span></span>
+    <ul class="pagination pagination-pf-back">
+      <li class="disabled"><a href="#" title="First Page"><span class="i fa fa-angle-double-left"></span></a></li>
+      <li class="disabled"><a href="#" title="Previous Page"><span class="i fa fa-angle-left"></span></a></li>
+    </ul>
+    <label for="pagination1-page" class="sr-only">Current Page</label>
+    <input class="pagination-pf-page" type="text" value="1" id="pagination1-page"/>
+    <span>of <span class="pagination-pf-pages">5</span></span>
+    <ul class="pagination pagination-pf-forward">
+      <li><a href="#" title="Next Page"><span class="i fa fa-angle-right"></span></a></li>
+      <li><a href="#" title="Last Page"><span class="i fa fa-angle-double-right"></span></a></li>
+    </ul>
+  </div>
+</form>
+
+<!-- Blank Slate HTML -->
+<div class="blank-slate-pf table-view-pf-empty hidden" id="emptyState1">
+  <div class="blank-slate-pf-icon">
+    <span class="pficon pficon pficon-add-circle-o"></span>
+  </div>
+  <h1>
+    Empty State Title
+  </h1>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  </p>
+  <p>
+    Learn more about this <a href="#">on the documentation</a>.
+  </p>
+  <div class="blank-slate-pf-main-action">
+    <button class="btn btn-primary btn-lg"> Main Action </button>
+  </div>
+  <div class="blank-slate-pf-secondary-action">
+    <button class="btn btn-default"> Secondary Action </button> <button class="btn btn-default"> Secondary Action </button> <button class="btn btn-default"> Secondary Action </button>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+
+// JSON data for Table View
+var dataSet = [
+{% for job in jobs %}
+{
+  job_name: "{{ job.name }}",
+  last_build_number: "{{ job.last_build_number }}",
+  last_build_result: "{{ job.last_build_result }}",
+  jenkins_server: "{{ job.jenkins_server }}"
+},
+{% endfor %}
+];
+
+// DataTable Config
+$("#table1").DataTable({
+  columns: [
+    { data: null,
+      className: "table-view-pf-select",
+      render: function (data, type, full, meta) {
+        // Select row checkbox renderer
+        var id = "select" + meta.row;
+        return '<label class="sr-only" for="' + id + '">Select row ' + meta.row +
+          '</label><input type="checkbox" id="' + id + '" name="' + id + '">';
+      },
+      sortable: false
+    },
+    { data: "job_name" },
+    { data: "last_build_number" },
+    { data: "last_build_result" },
+    { data: "jenkins_server" },
+    { data: null,
+      className: "table-view-pf-actions",
+      render: function (data, type, full, meta) {
+        // Inline action button renderer
+        return '<div class="table-view-pf-btn"><button class="btn btn-default" type="button">Actions</button></div>';
+      }
+    }, {
+      data: null,
+      className: "table-view-pf-actions",
+      render: function (data, type, full, meta) {
+        // Inline action kebab renderer
+        return '<div class="dropdown dropdown-kebab-pf">' +
+          '<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">' +
+          '<span class="fa fa-ellipsis-v"></span></button>' +
+          '<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebabRight">' +
+          '<li><a href="#">Action</a></li>' +
+          '<li><a href="#">Another action</a></li>' +
+          '<li><a href="#">Something else here</a></li>' +
+          '<li role="separator" class="divider"></li>' +
+          '<li><a href="#">Separated link</a></li></ul></div>';
+      }
+    }
+  ],
+  data: dataSet,
+  dom: "t",
+  language: {
+    zeroRecords: "No records found"
+  },
+  order: [[ 1, 'asc' ]],
+  pfConfig: {
+    emptyStateSelector: "#emptyState1",
+    filterCaseInsensitive: true,
+    filterCols: [
+      null,
+      {
+        default: true,
+        optionSelector: "#filter1",
+        placeholder: "Filter By Job Name..."
+      }, {
+        optionSelector: "#filter2",
+        placeholder: "Filter By Last Build Number..."
+      }, {
+        optionSelector: "#filter3",
+        placeholder: "Filter By Last Build Result"
+      }, {
+        optionSelector: "#filter4",
+        placeholder: "Filter By Jenkins Server..."
+      }
+    ],
+    paginationSelector: "#pagination1",
+    toolbarSelector: "#toolbar1",
+    selectAllSelector: 'th:first-child input[type="checkbox"]',
+    colvisMenuSelector: '.table-view-pf-colvis-menu'
+  },
+  select: {
+    selector: 'td:first-child input[type="checkbox"]',
+    style: 'multi'
+  },
+});
+
+/**
+ * Utility to show empty Table View
+ *
+ * @param {object} config - Config properties associated with a Table View
+ * @param {object} config.data - Data set for DataTable
+ * @param {string} config.deleteRowsSelector - Selector for delete rows control
+ * @param {string} config.restoreRowsSelector - Selector for restore rows control
+ * @param {string} config.tableSelector - Selector for the HTML table
+ */
+var emptyTableViewUtil = function (config) {
+  var self = this;
+
+  this.dt = $(config.tableSelector).DataTable(); // DataTable
+  this.deleteRows = $(config.deleteRowsSelector); // Delete rows control
+  this.restoreRows = $(config.restoreRowsSelector); // Restore rows control
+
+  // Handle click on delete rows control
+  this.deleteRows.on('click', function() {
+    self.dt.clear().draw();
+    $(self.restoreRows).prop("disabled", false);
+  });
+
+  // Handle click on restore rows control
+  this.restoreRows.on('click', function() {
+    self.dt.rows.add(config.data).draw();
+    $(this).prop("disabled", true);
+  });
+
+  // Initialize restore rows
+  if (this.dt.data().length === 0) {
+    $(this.restoreRows).prop("disabled", false);
+  }
+};
+
+// Initialize empty Table View util
+new emptyTableViewUtil({
+  data: dataSet,
+  deleteRowsSelector: "#deleteRows1",
+  restoreRowsSelector: "#restoreRows1",
+  tableSelector: "#table1"
+});
+
+/**
+ * Utility to find items in Table View
+ */
+var findTableViewUtil = function (config) {
+  // Upon clicking the find button, show the find dropdown content
+  $(".btn-find").click(function () {
+    $(this).parent().find(".find-pf-dropdown-container").toggle();
+  });
+
+  // Upon clicking the find close button, hide the find dropdown content
+  $(".btn-find-close").click(function () {
+    $(".find-pf-dropdown-container").hide();
+  });
+};
+
+// Initialize find util
+new findTableViewUtil();
+
+});
+</script>
+
+
+<script>
+// Initialize Datatables
+$(document).ready(function() {
+$('.datatable').dataTable();
+});
+</script>
+  
+
+<!-- -->
 {% endblock %}

@@ -13,15 +13,25 @@
 #    under the License.
 from configparser import ConfigParser
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from gevent.pywsgi import WSGIServer
 import logging
 import os
 
-from jino.views import webapp
-from jino.agent.jenkins import JenkinsAgent
-import jino.db.create as jino_db
+from jino.db.base import db
+from jino.db.versioning import setup_versioning
+import jino.views
+
 logger = logging.getLogger(__name__)
+app = Flask(__name__)
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+
+import jino.agent.jenkins_agent as j_agent  # noqa
+
+views = (
+    (jino.views.home, ''),
+)
 
 
 class WebApp(object):
@@ -39,8 +49,13 @@ class WebApp(object):
         self._setup_config(args_ns)
         if self.config['DEBUG']:
             self._update_logging_level(logging.DEBUG)
-        self.app = self.create_app(self.config)
+        self._register_blueprints()
         self._setup_database()
+
+    def _register_blueprints(self):
+        """Registers Flask blueprints."""
+        for view, prefix in views:
+            app.register_blueprint(view, url_prefix=prefix)
 
     def _setup_config(self, args_ns):
         """Load configuration from different sources."""
@@ -48,23 +63,17 @@ class WebApp(object):
         config_f = vars(args_ns)['config_file'] or self.DEFAULT_CONFIG_FILE
         if os.path.exists(config_f):
             self._load_config_from_file(config_f)
+        app.config.update(self.config)
+        app.config.from_object('jino.db.config')
 
     def _setup_database(self):
         """Set up the database.
 
         Creates all the tables.
         """
-        self.db = SQLAlchemy(self.app)
-        jino_db.create_db(self.db, self.app.config)
-
-    def create_app(self, config):
-        """Returns Flask application."""
-        app = Flask(__name__)
-        app.register_blueprint(webapp)
-        app.config.update(config)
-        app.config.from_object('jino.db.config')
-
-        return app
+        setup_versioning(app.config)
+        with app.app_context():
+            db.create_all()
 
     def _load_config_from_cli(self, args_ns):
         """Load arguments as passed by the user.
@@ -104,7 +113,6 @@ class WebApp(object):
         format = '%(levelname)s: %(name)s | %(message)s'
         level = logging.INFO
         logging.basicConfig(level=level, format=format)
-        logging.getLogger(__name__)
 
     def _update_logging_level(self, logging_level):
         """Update logging based on passed level."""
@@ -113,25 +121,29 @@ class WebApp(object):
     def setup_agents(self):
         """Create agents and start running them."""
         for instance_name, instance_conf in \
-                self.app.config.get('JENKINS_SERVERS').iteritems():
-            agent = JenkinsAgent(name=instance_name,
-                                 user=instance_conf.get('user', None),
-                                 password=instance_conf.get('password', None),
-                                 url=instance_conf.get('url', None))
+                app.config.get('JENKINS_SERVERS').iteritems():
+            agent = j_agent.JenkinsAgent(name=instance_name,
+                                         user=instance_conf.get('user', None),
+                                         password=instance_conf.get(
+                                             'password', None),
+                                         url=instance_conf.get('url', None),
+                                         app=app)
             self.agents.append(agent)
             logger.debug("Added new agent: %s" % instance_name)
-            agent.process.start()
+            # agent.pre_start(app)
+            agent.pre_run_process.start()
+            # agent.run_process.start()
 
     def run(self):
         """Runs the web server."""
         logger.info("Running Jino web server")
 
         listen_socket = (
-            self.app.config.get('BIND_HOST', self.DEFAULT_BIND_HOST),
-            self.app.config.get('PORT', self.DEFAULT_PORT)
+            app.config.get('BIND_HOST', self.DEFAULT_BIND_HOST),
+            app.config.get('PORT', self.DEFAULT_PORT)
         )
 
         self.server = WSGIServer(listen_socket,
-                                 application=self.app,
+                                 application=app,
                                  log='default')
         self.server.serve_forever()
