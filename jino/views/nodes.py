@@ -11,6 +11,20 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from .home import home  # noqa
-from .nodes import nodes  # noqa
-from .jobs import jobs  # noqa
+from flask import render_template
+from flask import Blueprint
+import logging
+
+import jino.models.node as node_model
+
+
+logger = logging.getLogger(__name__)
+
+nodes = Blueprint('nodes', __name__)
+
+
+@nodes.route('/')
+def index():
+    """Jenkins Nodes page."""
+    nodes = node_model.Node.query.all()
+    return render_template('nodes.html', nodes=nodes)

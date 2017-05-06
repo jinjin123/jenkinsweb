@@ -11,6 +11,18 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from .home import home  # noqa
-from .nodes import nodes  # noqa
-from .jobs import jobs  # noqa
+from jino.db.base import db
+
+
+class Agent(db.Model):
+    """Represents Jenkins agent/connection."""
+
+    __tablename__ = 'agent'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True, unique=True)
+    # Number of jenkins jobs
+    number_of_jobs = db.Column(db.Integer)
+
+    def __repr__(self):
+        return "<Agent %r" % (self.name)

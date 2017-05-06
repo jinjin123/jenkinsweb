@@ -31,6 +31,8 @@ import jino.agent.jenkins_agent as j_agent  # noqa
 
 views = (
     (jino.views.home, ''),
+    (jino.views.nodes, '/nodes'),
+    (jino.views.jobs, '/jobs'),
 )
 
 

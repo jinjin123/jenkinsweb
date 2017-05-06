@@ -20,6 +20,7 @@ from jino.agent import agent
 import jino.lib.jenkins as jenkins_lib
 import jino.models.job as job_model
 import jino.models.agent as agent_model
+import jino.models.node as node_model
 from jino.db.base import db
 
 LOG = logging.getLogger(__name__)
@@ -51,8 +52,16 @@ class JenkinsAgent(agent.Agent):
         """Populate the database with all the information from Jenkins."""
         with self.app.app_context():
 
-            # Initial update. Adds all the jobs with only their name to the DB
+            # Initial update. Adds all the jobs and nodes only with their name
+            # to the DB
             all_jobs = self.conn.get_all_jobs()
+            all_nodes = self.conn.get_nodes()
+
+            db_agent = agent_model.Agent.query.filter_by(
+                name=self.name).update(dict(number_of_jobs=len(all_jobs)))
+            LOG.debug("Updating number of jobs for %s" % db_agent)
+            db.session.commit()
+
             for job in all_jobs:
                 db_job = job_model.Job(name=job['name'],
                                        jenkins_server=self.name)
@@ -60,6 +69,14 @@ class JenkinsAgent(agent.Agent):
                 db.session.commit()
                 LOG.debug("Added job from %s: %s to \
 the database" % (self.name, job['name']))
+
+            for node in all_nodes:
+                db_node = node_model.Node(name=node['name'],
+                                          jenkins_server=self.name)
+                db.session.add(db_node)
+                db.session.commit()
+                LOG.debug("Added node from %s: %s to \
+the database" % (self.name, node['name']))
 
             for job in all_jobs:
                 # Now pull specific information for each job

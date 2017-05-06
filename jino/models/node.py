@@ -11,6 +11,17 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-from .home import home  # noqa
-from .nodes import nodes  # noqa
-from .jobs import jobs  # noqa
+from jino.db.base import db
+
+
+class Node(db.Model):
+    """Represents Jenkins node."""
+
+    __tablename__ = 'node'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True)
+    jenkins_server = db.Column(db.String(64))
+
+    def __repr__(self):
+        return "<Node %r" % (self.name)
